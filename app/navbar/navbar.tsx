@@ -26,7 +26,7 @@ export const Navbar = () => {
 
     return (
         <div className="py-40">
-            <nav className="max-w-xl mx-auto bg-gray-100 rounded-full px-2 py-3 flex items-center">
+            <nav className="max-w-xl mx-auto bg-gray-100 rounded-full px-2 py-1.5 flex items-center">
                 {navItems.map((item, idx) => (
                     <Link
                         onMouseEnter={() => setHovered(idx)}
