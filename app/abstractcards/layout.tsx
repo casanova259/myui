@@ -1,5 +1,5 @@
 import { Inter_Tight } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import LenisSmoothScroll from "@/components/SmoothScroll/lenis";
 
 const interTight = Inter_Tight({
