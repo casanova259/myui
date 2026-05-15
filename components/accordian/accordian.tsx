@@ -38,9 +38,6 @@ const ITEMS = [
     },
 ];
 
-const visible={
-    
-}
 
 export default function Accordion() {
     const [openId, setOpenId] = useState<number | null>(2);
@@ -68,16 +65,16 @@ export default function Accordion() {
 
                                 {/* Icon bubble */}
                                 <motion.div
-                                // initial={{
-                                //     opacity:isOpen ? 1:0,
+                                initial={{
+                                    opacity:isOpen ? 1:0,
 
-                                // }}
-                                // animate={{
-                                //     opacity:1,
-                                //     transition:{
-                                //         duration:1
-                                //     }
-                                // }}
+                                }}
+                                animate={{
+                                    opacity:1,
+                                    transition:{
+                                        duration:1
+                                    }
+                                }}
                                 
                                 style={{ ...s.iconWrap, ...(isOpen ? s.iconWrapOpen : {}) }}>
                                     {item.icon}
