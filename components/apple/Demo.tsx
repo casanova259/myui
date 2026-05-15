@@ -1,7 +1,9 @@
 "use client";
 
 
+import { delay } from "motion";
 import { motion } from "motion/react"
+import { del } from "motion/react-client";
 
 export const Demo = () => {
     const items = [
@@ -47,6 +49,16 @@ export const Demo = () => {
         "pr-[max(1rem,calc((100vw-72rem)/2+1rem))] " +
         "scroll-pl-[max(1rem,calc((100vw-72rem)/2+1rem))]";
 
+
+
+    const CARD_TRANSITION = {
+        type: 'spring' as const,
+        stiffness: 300,
+        damping: 25
+    }
+
+
+
     return (
         <section className="w-full overflow-hidden py-32">
             <div className="mx-auto max-w-6xl px-4">
@@ -56,21 +68,24 @@ export const Demo = () => {
 
             <div className={`flex gap-4 overflow-x-auto py-12 [scrollbar-width:none] snap-x snap-mandatory ${startEndInset} `}>
                 {items.map((item, index) => (
-                    <motion.div whileHover={{
+                    <motion.button whileHover={{
                         scale: 1.02
-                    }} key={item.title} className="rounded-3xl snap-start relative p-10 h-180 w-100 shrink-0 overflow-hidden">
+                    }}
+                        
+                        transition={CARD_TRANSITION}
+                        key={item.title} className="rounded-3xl snap-start flex items-start justify-start text-left relative p-10 h-180 w-100 shrink-0 overflow-hidden cursor-pointer">
 
 
                         <div className="size-10 z-20 flex items-center justify-center absolute right-4 bottom-4 rounded-full bg-white">
-                            <Icon/>
+                            <Icon />
                         </div>
 
                         <img src={item.image} alt={item.title} className="absolute inset-0 size-full object-cover" />
                         <div className="relative z-10 flex flex-col gap-3">
                             <h2 className="text-base font-medium text-white ">{item.title}</h2>
-                            <p className="text-3xl font-bold text-white/80 text-balance">{item.description}</p>
+                            <p className="text-3xl font-bold text-white/75 text-balance">{item.description}</p>
                         </div>
-                    </motion.div>
+                    </motion.button>
                 ))}
             </div>
         </section>
