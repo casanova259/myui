@@ -63,9 +63,9 @@ const Sidebar = () => {
 
                         {/* Header */}
                         <div className="relative z-10 flex items-center justify-between border-b border-neutral-800 px-8 py-7">
-                            <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
+                            {/* <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
                                 Menu
-                            </span>
+                            </span> */}
                             <button
                                 onClick={() => setOpen(false)}
                                 className="font-mono text-sm text-neutral-500 transition hover:text-white"
