@@ -53,7 +53,7 @@ const Sidebar = () => {
                                         className="w-full h-full object-cover"
                                     />
                                     {/* Heavy dark tint over bg */}
-                                    <div className="absolute inset-0 bg-black/50" />
+                                    <div className="absolute inset-0 bg-black/30" />
                                 </motion.div>
                             )}
                         </AnimatePresence>

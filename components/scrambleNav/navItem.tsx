@@ -52,7 +52,7 @@ const NavItem = ({ label, image, onHover, onLeave, onClick }: NavItemProps) => {
             className="group relative w-full text-left py-3 overflow-hidden rounded-sm"
         >
             {/* Per-item sliding image */}
-            <AnimatePresence>
+            {/* <AnimatePresence>
                 {hovered && (
                     <motion.div
                         key="bg"
@@ -70,7 +70,7 @@ const NavItem = ({ label, image, onHover, onLeave, onClick }: NavItemProps) => {
                         <div className="absolute inset-0 bg-black/40" />
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence> */}
 
             {/* Ghost */}
             <span className="invisible font-mono text-5xl font-black tracking-tight">
@@ -78,7 +78,7 @@ const NavItem = ({ label, image, onHover, onLeave, onClick }: NavItemProps) => {
             </span>
 
             {/* Scrambling text */}
-            <span className="absolute inset-0 z-10 flex items-center font-mono text-5xl font-black tracking-tight text-neutral-600 transition-colors duration-200 group-hover:text-white px-3">
+            <span className="absolute inset-0 z-10 flex items-center font-mono text-5xl font-black tracking-tight text-neutral-300 transition-colors duration-200 group-hover:text-white px-3">
                 {text}
             </span>
         </button>
