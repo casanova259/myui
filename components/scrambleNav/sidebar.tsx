@@ -37,7 +37,7 @@ const Sidebar = () => {
                         className="fixed top-0 left-0 z-50 flex h-screen w-[420px] flex-col overflow-hidden"
                     >
                         {/* Sidebar background image */}
-                        <AnimatePresence mode="wait">
+                        {/* <AnimatePresence mode="wait">
                             {bgImage && (
                                 <motion.div
                                     key={bgImage}
@@ -52,11 +52,11 @@ const Sidebar = () => {
                                         alt=""
                                         className="w-full h-full object-cover"
                                     />
-                                    {/* Heavy dark tint over bg */}
+                                    
                                     <div className="absolute inset-0 bg-black/30" />
                                 </motion.div>
                             )}
-                        </AnimatePresence>
+                        </AnimatePresence> */}
 
                         {/* Fallback solid bg when nothing hovered */}
                         <div className="absolute inset-0 z-[-1] bg-[#111]" />

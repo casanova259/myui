@@ -11,7 +11,7 @@ export default function ScrambleNav() {
             {/* Background image — only behind main content */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-black"
-                // style={{ backgroundImage: "url('/knight.jpg')" }}
+                style={{ backgroundImage: "url('/knight.jpg')" }}
             />
 
             {/* Dark overlay so sidebar stays readable */}
