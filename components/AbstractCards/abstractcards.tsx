@@ -55,10 +55,9 @@ const CARDS = [
 export default function AbstractCards() {
 
 
-    const sectionRef = useRef(null);
-    const wrapperRefs = useRef([]);
-    const innerRefs = useRef([]);
-
+    const sectionRef = useRef<HTMLElement>(null);
+    const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const innerRefs = useRef<(HTMLDivElement | null)[]>([]);
     useLayoutEffect(() => {
         const section = sectionRef.current;
         if (!section) return;
@@ -70,9 +69,8 @@ export default function AbstractCards() {
         }));
 
         wrapperRefs.current.forEach((wrapper, idx) => {
-            if (wrapper) wrapper.style.zIndex = String(initial[idx].zIndex)
-        })
-
+            if (wrapper) wrapper.style.zIndex = String(initial[idx].zIndex);
+        });
 
         const ctx = gsap.context(() => {
 
@@ -81,45 +79,43 @@ export default function AbstractCards() {
                 if (!inner || !wrapper) return;
 
                 const measureOffset = () => {
-                    const wRect = wrapper.getBoundingClientRect();
-                    const sRect = section.getBoundingClientRect();
-
+                    const wRect = (wrapper as HTMLDivElement).getBoundingClientRect();
+                    const sRect = (section as HTMLElement).getBoundingClientRect();
                     return {
                         x: sRect.left + sRect.width / 2 - (wRect.left + wRect.width / 2),
                         y: sRect.top + sRect.height / 2 - (wRect.top + wRect.height / 2),
-                    }
+                    };
                 };
 
-
+                // gsap.fromTo is INSIDE the forEach
                 gsap.fromTo(inner,
                     {
                         x: () => measureOffset().x,
                         y: () => measureOffset().y,
                         scale: initial[idx].scale,
-                        rotate: initial[idx].rotation
-                    }, {
-                    x: 0,
-                    y: 0,
-                    scale: 1,
-                    rotate: 0,
-                    ease: "back.inOut(2)",
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 20%",
-                        end: "top -10%",
-                        scrub: 1.3,
-                        invalidateOnRefresh: true
+                        rotate: initial[idx].rotation,
+                    },
+                    {
+                        x: 0,
+                        y: 0,
+                        scale: 1,
+                        rotate: 0,
+                        ease: "back.inOut(2)",
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 20%",
+                            end: "top -10%",
+                            scrub: 1.3,
+                            invalidateOnRefresh: true,
+                        },
                     }
-                }
-                )
-            })
+                );
+            }); // end forEach
 
-
-
-        }, section)
+        }, section); // end gsap.context
 
         return () => ctx.revert();
-    }, [])
+    }, []); // end useLayoutEffect
 
     return (
         <section ref={sectionRef} className="h-screen w-full flex flex-col items-center justify-center bg-[#fcf5e2] text-black overflow-x-clip relative">
@@ -129,7 +125,7 @@ export default function AbstractCards() {
             </h2>
 
             <p className="mt-10 max-md:mt-8 max-md:w-[85vw] max-md:text-[3.7vw] w-[40%] text-center text-[1.3vw] leading-[1.3] tracking-tight">
-                I' m just a simple dev who loves building products advanced web animation into simple
+                I m just a simple dev who loves building products advanced web animation into simple
                 steps.
             </p>
 
