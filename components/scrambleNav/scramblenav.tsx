@@ -15,7 +15,7 @@ export default function ScrambleNav() {
             />
 
             {/* Dark overlay so sidebar stays readable */}
-            <div className="absolute inset-0 bg-black/50" />
+            {/* <div className="absolute inset-0 bg-black/50" /> */}
 
             {/* Sidebar sits on top */}
             <div className="relative z-10">

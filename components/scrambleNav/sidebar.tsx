@@ -4,14 +4,19 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavItem from "./navItem";
 
-const NAV_LINKS = ["Home", "Engine", "General", "Story", "Media"];
-
+const NAV_LINKS = [
+    { label: "Home", image: "/home.jpg" },
+    { label: "Engine", image: "/engine.jpg" },
+    { label: "General", image: "/general.jpg" },
+    { label: "Story", image: "/story.jpg" },
+    { label: "Media", image: "/media.jpg" },
+];
 const Sidebar = () => {
     const [open, setOpen] = useState(false);
+    const [bgImage, setBgImage] = useState<string | null>(null);
 
     return (
         <>
-            {/* Hamburger trigger — always visible */}
             {!open && (
                 <button
                     onClick={() => setOpen(true)}
@@ -22,7 +27,6 @@ const Sidebar = () => {
                 </button>
             )}
 
-            {/* Sidebar overlay */}
             <AnimatePresence>
                 {open && (
                     <motion.aside
@@ -30,10 +34,35 @@ const Sidebar = () => {
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="fixed top-0 left-0 z-50 flex h-screen w-[420px] flex-col bg-[#111]"
+                        className="fixed top-0 left-0 z-50 flex h-screen w-[420px] flex-col overflow-hidden"
                     >
+                        {/* Sidebar background image */}
+                        <AnimatePresence mode="wait">
+                            {bgImage && (
+                                <motion.div
+                                    key={bgImage}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="absolute inset-0 z-0"
+                                >
+                                    <img
+                                        src={bgImage}
+                                        alt=""
+                                        className="w-full h-full object-cover"
+                                    />
+                                    {/* Heavy dark tint over bg */}
+                                    <div className="absolute inset-0 bg-black/50" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Fallback solid bg when nothing hovered */}
+                        <div className="absolute inset-0 z-[-1] bg-[#111]" />
+
                         {/* Header */}
-                        <div className="flex items-center justify-between border-b border-neutral-800 px-8 py-7">
+                        <div className="relative z-10 flex items-center justify-between border-b border-neutral-800 px-8 py-7">
                             <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-neutral-500">
                                 Menu
                             </span>
@@ -46,11 +75,14 @@ const Sidebar = () => {
                         </div>
 
                         {/* Nav links */}
-                        <nav className="flex flex-col px-8 py-10 gap-1">
+                        <nav className="relative z-10 flex flex-col px-8 py-10 gap-1">
                             {NAV_LINKS.map((link) => (
                                 <NavItem
-                                    key={link}
-                                    label={link}
+                                    key={link.label}
+                                    label={link.label}
+                                    image={link.image}
+                                    onHover={() => setBgImage(link.image)}
+                                    onLeave={() => setBgImage(null)}
                                     onClick={() => setOpen(false)}
                                 />
                             ))}
