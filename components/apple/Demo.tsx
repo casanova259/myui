@@ -87,10 +87,12 @@ export const Demo = () => {
     const [open, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<typeof items[0] | null>(null);
 
+    // if (!selectedItem) return null;
+
     return (
         <section className="w-full overflow-hidden py-32">
             <AnimatePresence>
-                {open &&
+                {open && selectedItem&&
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -111,8 +113,8 @@ export const Demo = () => {
 
                             <div className="flex justify-start items-center ">
                                 <div className="flex flex-col gap-1">
-                                    <h2 className="text-xl   mb-4 ml-1 text-black">{selectedItem.title}</h2>
-                                    <h1 className="text-5xl  font-bold tracking-tight mb-4 ml-1 text-black">{selectedItem.description}</h1>
+                                    <h2 className="text-xl   mb-4 ml-1 text-black">{selectedItem?.title}</h2>
+                                    <h1 className="text-5xl  font-bold tracking-tight mb-4 ml-1 text-black">{selectedItem?.description}</h1>
                                 </div>
                             </div>
 
