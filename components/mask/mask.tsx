@@ -27,7 +27,7 @@ export const Mask = () => {
                     WebkitMaskSize: `${size}px`,
                     maskPosition: `${x - size / 2}px ${y - size / 2}px`,
                     maskSize: `${size}px`,
-                }}
+                } as Record<string, string>}
                 transition={{ type: "tween", ease: "backOut", duration: 0.5 }}
                 style={{
                     maskImage: 'url("/Ellipse.svg")',
@@ -42,8 +42,8 @@ export const Mask = () => {
                     onMouseLeave={() => setIsHovered(false)}
                     className="text-center text-black text-6xl px-10 max-w-7xl cursor-none"
                 >
-                    I'm an engineer who loves to Build and challenge myself with new ideas.
-                    (yet) i'm making good stuff and building myself.
+                    I m an engineer who loves to Build and challenge myself with new ideas.
+                    (yet) I m making good stuff and building myself.
                 </p>
             </motion.div>
 

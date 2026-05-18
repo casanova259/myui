@@ -49,7 +49,7 @@ export const Card = () => {
                             Ui components
                         </h2>
                         <p className="text-neutral-600 mt-2 text-[10px]">
-                            A collection of beautiful UI components ,let's get on with it .
+                            A collection of beautiful UI components ,let get on with it .
                         </p>
 
                         <div className="flex items-center justify-center">

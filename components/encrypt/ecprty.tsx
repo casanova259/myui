@@ -17,7 +17,7 @@ const SHUFFLE_TIME = 50;
 const CHARS = "!@#$%^&*():{};|,.<>/?";
 
 const EncryptButton = () => {
-    const intervalRef = useRef(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const [text, setText] = useState(TARGET_TEXT);
 
