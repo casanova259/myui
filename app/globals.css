@@ -24,3 +24,23 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.card-section {
+  width: 100vw;
+  min-width: 100vw;   /* prevents flex from shrinking it */
+  flex-shrink: 0;     /* critical — flex children must NOT shrink */
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+ 
+/* ── Horizontal scroll track (applied by JS after mount) ─────────────────── */
+#pin-container {
+  display: flex;
+  /* width is set dynamically to cards.length * 100vw */
+  will-change: transform;
+}
