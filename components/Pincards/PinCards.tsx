@@ -32,7 +32,7 @@ const cards: CardData[] = [
         body: "Throughout heaven and earth, he alone is the honored one. Infinity stretches endlessly where complexity vanishes into zero.",
         tag: "SIX EYES ACTIVE / INFINITY (∞) RESOLUTION",
         tagBg: "border border-black/40 text-black",
-        imageSrc: "/images/gojo.jpg",
+        imageSrc: "/home.jpg",
         imageLabel: "LIMITLESS / BLUE / RED / PURPLE",
     },
     {
@@ -117,18 +117,18 @@ const cards: CardData[] = [
 
 
 // ─── Placeholder image (remove when you add real images) ─────────────────────
-function Placeholder({ label, dark }: { label: string; dark?: boolean }) {
-    return (
-        <div
-            className={`w-full h-full flex items-end justify-center pb-3 ${dark ? "bg-gray-800 text-white" : "bg-gray-300 text-black"
-                }`}
-        >
-            <span className="text-[10px] tracking-widest font-bold uppercase opacity-60">
-                {label || "IMAGE"}
-            </span>
-        </div>
-    );
-}
+// function Placeholder({ label, dark }: { label: string; dark?: boolean }) {
+//     return (
+//         <div
+//             className={`w-full h-full flex items-end justify-center pb-3 ${dark ? "bg-gray-800 text-white" : "bg-gray-300 text-black"
+//                 }`}
+//         >
+//             <span className="text-[10px] tracking-widest font-bold uppercase opacity-60">
+//                 {label || "IMAGE"}
+//             </span>
+//         </div>
+//     );
+// }
 
 // ─── Framed image component ───────────────────────────────────────────────────
 function FramedImage({
@@ -154,9 +154,11 @@ function FramedImage({
                 />
             )}
             <div className={`relative border-4 ${dark ? "border-black" : "border-black"}`}>
-                <div className="aspect-[3/4] overflow-hidden">
-                    {/* Replace Placeholder with <img src={src} … /> once you have real images */}
-                    <Placeholder label={label} dark={dark} />
+                <div className="aspect-[3/4] overflow-hidden ">
+                    <img
+                    src={src}
+                    className="object-fit"
+                    />
                 </div>
                 {label && (
                     <div
@@ -180,7 +182,7 @@ function FramedImage({
 
 function ImageRightCard({ card }: { card: CardData }) {
     return (
-        <div className={`card-section ${card.bg} relative overflow-hidden min-h-screen w-full`}>
+        <div className={`card-section ${card.bg} relative overflow-hidden `}>
             {/* ghosted background text */}
             <span
                 aria-hidden
@@ -242,7 +244,7 @@ function ImageRightCard({ card }: { card: CardData }) {
 function ImageLeftCard({ card }: { card: CardData }) {
     const isDark = card.bg.includes("111") || card.bg.includes("C03");
     return (
-        <div className={`card-section ${card.bg} relative overflow-hidden  min-h-screen w-full`}>
+        <div className={`card-section ${card.bg} relative overflow-hidden  `}>
             <span
                 aria-hidden
                 className="pointer-events-none absolute inset-0 flex items-center justify-end pr-6 text-[20vw] font-black uppercase opacity-10 leading-none select-none"
@@ -305,7 +307,7 @@ function ImageLeftCard({ card }: { card: CardData }) {
 
 function CenteredCard({ card }: { card: CardData }) {
     return (
-        <div className={`card-section ${card.bg} relative overflow-hidden min-h-screen w-full`}>
+        <div className={`card-section ${card.bg} relative overflow-hidden `}>
             {/* stripe texture overlay */}
             <div
                 className="pointer-events-none absolute inset-0 opacity-20"
