@@ -103,7 +103,7 @@ export default function SectionItoshiRin() {
 
 export const SectionShiedo = () => {
 
-    const videoRef=useRef<HTMLVideoElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const handleMouseEnter = () => {
         if (videoRef.current) {
@@ -121,6 +121,85 @@ export const SectionShiedo = () => {
         <section className="relative h-svh  w-full overflow-hidden">
 
             <div className="absolute inset-[-25%]  flex items-center justify-center bg-red-500">
+
+                <div className="absolute inset-0 z-0 opacity-[0.10] pointer-events-none  flex items-center justify-center">
+                    <span className="text-[30svh] leading-none font-black whitespace-wrap text-black font-monster-beast">
+                        BERSERK
+                    </span>
+                </div>
+
+
+                {/* Content */}
+
+                <div className="relative z-10 flex h-full w-full flex-col gap-4  md:flex-row md:p-12">
+
+                    <div className="order-2 flex w-[30%] items-center justify-center ml-72 pt-12 md:order-1 md:pt-0 ">
+
+                        <div className="relative h-[50vh] w-[20vw] p-4 md:w-[25vw]  ">
+                            <div className="absolute inset-0 -bottom-6 -left-6 z-0 bg-linear-to-tr from-black via-[#000000] to-black" />
+                            <div className="absolute inset-0 z-0 border border-neutral-700/60" />
+
+                            <div className="absolute top-0 right-0 z-20 h-12 w-12 border-t-2 border-r-2 border-neutral-500" />
+
+
+                            <div className="absolute bottom-0 left-0 z-20 h-12 w-12 border-b-2 border-l-2 border-neutral-500" />
+                            <div className="relative z-10 h-full w-full overflow-hidden border border-neutral-600 bg-[#0a0a0a] shadow-2xl"
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            >
+                                <video
+                                    ref={videoRef}
+                                    src="/videos/SHEIDO.mp4"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    className=" absolute h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                />
+                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className="order-1 flex flex-1/4 flex-col items-start justify-center gap-2 pb-8 md:order-2 md:pb-12">
+                        <span className="text-sm font-bold text-neutral-100 uppercase tracking-widest font-monster-beast">
+                            BERSERK
+                        </span>
+                        <h1 className="text-[clamp(4rem,12vw,14rem)] leading-[0.85] font-black tracking-tighter uppercase text-white font-monster-beast">
+                            SHIDOU<br />
+                            <span className="text-[#F5E3DB]">RYUSEI</span>
+                        </h1>
+                        <p className="max-w-xl text-[1.25rem] leading-tight font-medium text-neutral-300 md:text-[1.65rem] font-monster-beast">
+                            Hey genius, is a lifeform like me not enough of a reason for you to fight?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+    )
+}
+export const SectionIsagi = () => {
+
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    const handleMouseEnter = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = false;
+            videoRef.current.volume = 1;
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = true;
+        }
+    };
+    return (
+        <section className="relative h-svh  w-full overflow-hidden">
+
+            <div className="absolute inset-[-25%]  flex items-center justify-center bg-blue-400">
 
                 <div className="absolute inset-0 z-0 opacity-[0.10] pointer-events-none  flex items-center justify-center">
                     <span className="text-[30svh] leading-none font-black whitespace-wrap text-black font-monster-beast">
@@ -168,6 +247,88 @@ export const SectionShiedo = () => {
                         </h1>
                         <p className="max-w-xl text-[1.25rem] leading-tight font-medium text-neutral-300 md:text-[1.65rem] font-monster-beast">
                             Hey genius, is a lifeform like me not enough of a reason for you to fight?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+    )
+}
+export const SectionNagi = () => {
+
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    const handleMouseEnter = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = false;
+            videoRef.current.volume = 1;
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = true;
+        }
+    };
+    return (
+        <section className="relative h-svh  w-full overflow-hidden">
+
+            <div className="absolute inset-[-25%]  flex items-center justify-center bg-[#E5DED4]">
+
+                <div className="absolute inset-0 z-0 opacity-[0.10] pointer-events-none  flex items-center justify-center">
+                    <span className="text-[50svh] leading-none font-black whitespace-wrap text-black font-monster-beast">
+                        NAGI
+                    </span>
+                </div>
+
+
+                {/* Content */}
+
+                <div className="relative z-10 flex h-full w-full items-center justify-center  ">
+
+                    <div className=" flex w-[45vw] items-center justify-center pr-6 "
+                    
+                    >
+
+
+                        <div className="relative h-[50vh] w-[20vw] p-4 md:w-[25vw]  ">
+                            <div className="absolute inset-0 -bottom-6 -left-6 z-0 bg-linear-to-tr from-black via-[#000000] to-black" />
+                            <div className="absolute inset-0 z-0 border border-neutral-700/60" />
+
+                            <div className="absolute top-0 right-0 z-20 h-12 w-12 border-t-2 border-r-2 border-neutral-500" />
+
+
+                            <div className="absolute bottom-0 left-0 z-20 h-12 w-12 border-b-2 border-l-2 border-neutral-500" />
+                            <div className="relative z-10 h-full w-full overflow-hidden border border-neutral-600 bg-[#0a0a0a] shadow-2xl"
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            >
+                                <video
+                                    ref={videoRef}
+                                    src="/videos/Nagi.mp4"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    className=" absolute h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                />
+                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className=" flex w-[60vw] flex-col items-start justify-center gap-2 pb-8  mr-8">
+                        <span className="text-sm font-bold text-black uppercase tracking-widest font-monster-beast">
+                            MR. HASSLEMAN
+                        </span>
+                        <h1 className="text-[clamp(4rem,12vw,14rem)] leading-[0.85] font-black tracking-tighter uppercase text-[#184B84] text-wrap font-monster-beast">
+                            Hassle <br />
+                            <span className="text-[#3178AE]">Nagi</span>
+                        </h1>
+                        <p className="max-w-xl text-[1.25rem] leading-tight font-medium text-[#0F243D] md:text-[1.65rem] font-monster-beast">
+                            You talk too much for someone who lost. I'm gonna beat you and make you my servant
                         </p>
                     </div>
                 </div>
