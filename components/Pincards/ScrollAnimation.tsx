@@ -19,6 +19,7 @@ export default function ScrollAnimation() {
                 pin: true,
                 scrub: 1,
                 pinSpacing: false,
+                // markers:true
             });
 
             // incoming card rotates from 15deg to 0 as it enters
