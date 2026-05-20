@@ -4,23 +4,25 @@ import SectionItoshiRin, { SectionNagi, SectionShiedo } from "@/components/Pinca
 import { SectionIsagi } from "../../components/Pincards/PinCards";
 
 import Image from "next/image";
+import ScrollAnimation from "@/components/Pincards/ScrollAnimation";
 
 
 // app/page.tsx
 export default function Home() {
     return (
         <main className="w-full bg-[#0f0f0f]">
+            <ScrollAnimation/>
             <header className="relative flex h-[100svh] w-full items-center justify-center bg-black p-8 text-white">
                 <h1 className="text-center text-[9rem] leading-none font-black tracking-tighter uppercase font-monster-beast">
                     Meet The Egoists <br />
                     <Image
-                    src="/BLUELOCK.webp"
-                    width={350}
-                    height={350}
+                    src="/RT.png"
+                    width={250}
+                    height={250}
                     className="inline-block"
                     alt="BLUELOCK_LOGO"
                     />
-                    <span className="text-[#004AAD]">BLUELOCK </span>
+                    <span className="text-[#004AAD] text-[10rem]">BLUELOCK </span>
                 </h1>
             </header>
             <SectionItoshiRin />

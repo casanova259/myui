@@ -22,7 +22,7 @@ export default function SectionItoshiRin() {
         }
     };
     return (
-        <section className="relative h-svh min-h-svh w-full overflow-hidden flex items-center justify-center">
+        <section data-section className="relative  min-h-screen w-full overflow-hidden flex items-center justify-center">
 
             <div className="absolute  bg-[#8be8bd]/65    flex items-center justify-center h-full w-full">
 
@@ -118,7 +118,7 @@ export const SectionShiedo = () => {
         }
     };
     return (
-        <section className="relative h-svh  w-full overflow-hidden">
+        <section data-section className="relative min-h-screen   w-full overflow-hidden">
 
             <div className="absolute inset-[-25%]  flex items-center justify-center bg-red-500">
 
@@ -206,7 +206,7 @@ export const SectionIsagi = () => {
     };
 
     return (
-        <section className="relative h-svh min-h-svh w-full overflow-hidden flex items-center justify-center">
+        <section data-section className="relative h-svh min-h-svh  w-full overflow-hidden flex items-center justify-center">
 
             <div className="absolute bg-[#649BE1] flex items-center justify-center h-full w-full">
 
@@ -302,7 +302,7 @@ export const SectionNagi = () => {
         }
     };
     return (
-        <section className="relative h-svh  w-full overflow-hidden">
+        <section data-section className="relative  h-svh  w-full overflow-hidden">
 
             <div className="absolute inset-[-25%]  flex items-center justify-center bg-[#E5DED4]">
 
