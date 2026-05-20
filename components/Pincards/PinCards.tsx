@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 
 
 
@@ -10,11 +10,16 @@ export default function SectionItoshiRin() {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     const handleMouseEnter = () => {
-        if (videoRef.current) videoRef.current.muted = false;
+        if (videoRef.current) {
+            videoRef.current.muted = false;
+            videoRef.current.volume = 1;
+        }
     };
 
     const handleMouseLeave = () => {
-        if (videoRef.current) videoRef.current.muted = true;
+        if (videoRef.current) {
+            videoRef.current.muted = true;
+        }
     };
     return (
         <section className="relative h-svh min-h-svh w-full overflow-hidden flex items-center justify-center">
@@ -32,7 +37,7 @@ export default function SectionItoshiRin() {
                 <div className="relative z-10 flex flex-col md:flex-row gap-64 h-[80vh] ">
 
                     <div className="flex flex-1 flex-col items-start justify-center gap-4 pb-6 md:pb-8 mt-8 ">
-                        <span className="text-sm font-bold text-neutral-50 uppercase tracking-widest font-monster-beast">
+                        <span className="text-sm font-bold text-[#161616] uppercase tracking-widest font-monster-beast">
                             NO. 1 — BLUELOCK XI
                         </span>
                         <h1 className="mt-2 text-[clamp(4rem,12vw,14rem)] leading-[0.85] font-black tracking-tighter uppercase text-white font-monster-beast">
@@ -43,7 +48,7 @@ export default function SectionItoshiRin() {
                             Friend or foe doesn't matter. You're all half-baked NPC's to me.
                         </p>
                         <div className="mt-2 border border-black/30 bg-white px-3 py-1">
-                            <span className="font-mono text-xs font-bold tracking-widest text-black/80 uppercase font-monster-beast">
+                            <span className=" text-xs font-bold tracking-widest text-black/80 uppercase font-monster-beast">
                                 NO 1 Bluelock XI
                             </span>
                         </div>
@@ -55,17 +60,19 @@ export default function SectionItoshiRin() {
                         <div className="relative h-[50vh] w-[20vw] p-4 md:w-[25vw]  ">
 
                             {/* two decorative offset borders behind */}
-                            <div className="absolute inset-0 z-0 rotate-[3deg] border border-dashed border-black opacity-30" />
-                            <div className="absolute inset-0 z-0 -rotate-[2deg] border-[1.5px] border-black opacity-40" />
+                            <div className="absolute inset-0 z-0 rotate-3 border border-dashed border-black opacity-60" />
+                            <div className="absolute inset-0 z-0 -rotate-2 border-[1.5px] border-black opacity-40" />
 
                             {/* main video box */}
-                            <div className="relative z-10 h-full w-full overflow-hidden border-2 border-white bg-[#7a8074] outline outline-4 outline-black/90">
+                            <div
+                                className="relative z-10 h-full w-full overflow-hidden border-2 border-white bg-[#7a8074] outline  outline-black/90"
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                            >
                                 <video
-                                ref={videoRef}
+                                    ref={videoRef}
                                     src="/videos/Rin.mp4"
                                     autoPlay muted loop playsInline
-                                    onMouseEnter={handleMouseEnter}
-                                    onMouseLeave={handleMouseLeave}
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                 />
                             </div>
@@ -92,4 +99,81 @@ export default function SectionItoshiRin() {
 
         </section>
     );
+}
+
+export const SectionShiedo = () => {
+
+    const videoRef=useRef<HTMLVideoElement>(null);
+
+    const handleMouseEnter = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = false;
+            videoRef.current.volume = 1;
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = true;
+        }
+    };
+    return (
+        <section className="relative h-svh  w-full overflow-hidden">
+
+            <div className="absolute inset-[-25%]  flex items-center justify-center bg-red-500">
+
+                <div className="absolute inset-0 z-0 opacity-[0.10] pointer-events-none  flex items-center justify-center">
+                    <span className="text-[30svh] leading-none font-black whitespace-wrap text-black font-monster-beast">
+                        BERSERK
+                    </span>
+                </div>
+
+
+                {/* Content */}
+
+                <div className="relative z-10 flex h-full w-full flex-col gap-4  md:flex-row md:p-12">
+
+                    <div className="order-2 flex w-[30%] items-center justify-center ml-72 pt-12 md:order-1 md:pt-0 ">
+
+                        <div className="relative h-[50vh] w-[20vw] p-4 md:w-[25vw]  ">
+                            <div className="absolute inset-0 -bottom-6 -left-6 z-0 bg-linear-to-tr from-black via-[#000000] to-black" />
+                            <div className="absolute inset-0 z-0 border border-neutral-700/60" />
+
+                            <div className="absolute top-0 right-0 z-20 h-12 w-12 border-t-2 border-r-2 border-neutral-500" />
+
+
+                            <div className="absolute bottom-0 left-0 z-20 h-12 w-12 border-b-2 border-l-2 border-neutral-500" />
+                            <div className="relative z-10 h-full w-full overflow-hidden border border-neutral-600 bg-[#0a0a0a] shadow-2xl">
+                                <video
+                                    ref={videoRef}
+                                    src="/videos/SHEIDO.mp4"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    className=" absolute h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                />
+                                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div className="order-1 flex flex-1/4 flex-col items-start justify-center gap-2 pb-8 md:order-2 md:pb-12">
+                        <span className="text-sm font-bold text-neutral-100 uppercase tracking-widest font-monster-beast">
+                            BERSERK
+                        </span>
+                        <h1 className="text-[clamp(4rem,12vw,14rem)] leading-[0.85] font-black tracking-tighter uppercase text-white font-monster-beast">
+                            SHIDOU<br />
+                            <span className="text-[#F5E3DB]">RYUSEI</span>
+                        </h1>
+                        <p className="max-w-xl text-[1.25rem] leading-tight font-medium text-neutral-300 md:text-[1.65rem] font-monster-beast">
+                            Hey genius, is a lifeform like me not enough of a reason for you to fight?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+    )
 }
