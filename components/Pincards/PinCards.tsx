@@ -1,12 +1,8 @@
-"use client";
+"use client"; // Required if you are using Next.js App Router
 
 import { useRef } from "react";
-// import Image from "next/image";
-
-
 
 export default function SectionItoshiRin() {
-
     const videoRef = useRef<HTMLVideoElement>(null);
 
     const handleMouseEnter = () => {
@@ -21,10 +17,10 @@ export default function SectionItoshiRin() {
             videoRef.current.muted = true;
         }
     };
-    return (
-        <section data-section className="relative  min-h-screen w-full overflow-hidden flex items-center justify-center">
 
-            <div className="absolute  bg-[#8be8bd]/65    flex items-center justify-center h-full w-full">
+    return (
+        <section data-section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+            <div className="absolute bg-[#8be8bd]/65 flex items-center justify-center h-full w-full">
 
                 {/* watermark */}
                 <div className="absolute inset-0 z-0 opacity-[0.10] pointer-events-none flex items-center justify-center">
@@ -34,7 +30,7 @@ export default function SectionItoshiRin() {
                 </div>
 
                 {/* content */}
-                <div className="relative z-10 flex flex-col md:flex-row gap-64 h-[80vh] ">
+                <div className="relative z-10 flex flex-col md:flex-row gap-64 h-[80vh]">
 
                     <div className="flex flex-1 flex-col items-start justify-center gap-4 pb-6 md:pb-8 mt-8 ">
                         <span className="text-sm font-bold text-[#161616] uppercase tracking-widest font-monster-beast">
@@ -54,10 +50,9 @@ export default function SectionItoshiRin() {
                         </div>
                     </div>
 
-
-                    {/* right col — image goes here later */}
+                    {/* right col */}
                     <div className="order-1 flex flex-1 items-center justify-center pt-12 md:order-2 md:pt-0">
-                        <div className="relative h-[50vh] w-[20vw] p-4 md:w-[25vw]  ">
+                        <div className="relative h-[50vh] w-[20vw] p-4 md:w-[25vw]">
 
                             {/* two decorative offset borders behind */}
                             <div className="absolute inset-0 z-0 rotate-3 border border-dashed border-black opacity-60" />
@@ -65,14 +60,20 @@ export default function SectionItoshiRin() {
 
                             {/* main video box */}
                             <div
-                                className="relative z-10 h-full w-full overflow-hidden border-2 border-white bg-[#7a8074] outline  outline-black/90"
+                                className="relative z-10 h-full w-full overflow-hidden border-2 border-white bg-[#7a8074] outline outline-black/90 cursor-pointer"
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
+                                /* Added an onClick to force user interaction if audio is blocked */
+                                onClick={handleMouseEnter}
                             >
                                 <video
                                     ref={videoRef}
+                                    controls={false}
                                     src="/Videos/RIn.mp4"
-                                    autoPlay muted loop playsInline
+                                    autoPlay
+                                    muted // Must start muted for autoplay to work
+                                    loop
+                                    playsInline // Required for iOS autoplay
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                 />
                             </div>
@@ -96,7 +97,6 @@ export default function SectionItoshiRin() {
                     </div>
                 </div>
             </div>
-
         </section>
     );
 }
@@ -149,7 +149,7 @@ export const SectionShiedo = () => {
                             >
                                 <video
                                     ref={videoRef}
-                                    src="/videos/SHEIDO.mp4"
+                                    src="/Videos/SHEIDO.mp4"
                                     autoPlay
                                     loop
                                     muted
@@ -255,7 +255,7 @@ export const SectionIsagi = () => {
                             >
                                 <video
                                     ref={videoRef}
-                                    src="/videos/ISHAGI.mp4"
+                                    src="/Videos/ISHAGI.mp4"
                                     autoPlay muted loop playsInline
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                 />
@@ -351,7 +351,7 @@ export const SectionBaro = () => {
                             >
                                 <video
                                     ref={videoRef}
-                                    src="/videos/BARO.mp4"
+                                    src="/Videos/BARO.mp4"
                                     autoPlay muted loop playsInline
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                 />
