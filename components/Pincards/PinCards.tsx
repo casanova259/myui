@@ -71,7 +71,7 @@ export default function SectionItoshiRin() {
                             >
                                 <video
                                     ref={videoRef}
-                                    src="/videos/Rin.mp4"
+                                    src="/Videos/Rin.mp4"
                                     autoPlay muted loop playsInline
                                     className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                                 />
@@ -398,7 +398,7 @@ export const SectionNagi = () => {
         }
     };
     return (
-        <section data-section className="relative  h-svh  w-full overflow-hidden">
+        <section data-section className="relative  h-screen  w-full overflow-hidden">
 
             <div className="absolute inset-[-25%]  flex items-center justify-center bg-[#E5DED4]">
 
