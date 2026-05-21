@@ -30,3 +30,95 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fp-button {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  background: #0F0F0F;
+  border-radius: 50%;
+  box-shadow:
+    10px 10px 18px rgba(55, 84, 170, 0.15),
+    
+    inset 0px 0px 4px rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.7s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  border: none;
+  font-size: 0;
+  cursor: pointer;
+}
+
+.fp-button svg {
+  width: 80%;
+  filter: drop-shadow(-1px -1px 1px rgba(55, 84, 170, 0.2));
+}
+
+.fp-button .draw {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+.fp-button .prints {
+  opacity: 0;
+}
+
+/* .fp-button:hover,
+.fp-button:focus {
+  box-shadow:
+    inset 7px 7px 15px rgba(55, 84, 170, 0.15),
+    inset -7px -7px 20px white,
+    0px 0px 4px rgba(255, 255, 255, 0.2);
+} */
+
+.fp-button:hover .draw {
+  opacity: 0.4;
+}
+.fp-button:hover .prints {
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.fp-button::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background: #f1f3f6;
+  border-radius: 50%;
+  position: absolute;
+  top: 110%;
+  /* box-shadow:
+    inset 2px 2px 5px rgba(55, 84, 170, 0.15),
+    inset -2px -2px 5px white; */
+}
+
+.fp-button::after {
+  --color: #ff99ac;
+  content: "";
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(110% + 6px);
+  z-index: 9999;
+  box-shadow:
+    0 0 6px var(--color),
+    0 0 12px var(--color),
+    0 0 20px var(--color);
+  animation: flash 0.6s infinite alternate forwards;
+}
+
+.fp-button:hover::after {
+  --color: rgb(157, 231, 231);
+}
+
+/* @keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+} */
