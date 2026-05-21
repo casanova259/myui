@@ -2,6 +2,8 @@
 
 import FingerprintButton from "@/components/fingerprint/FIngerScan";
 import { AnimationSequences } from "@/components/animateSqnc/animateSqnc";
+import StatCounter from "@/components/counter/counter";
+import ToastAnimator from "@/components/toaster/toast";
 
 export default function Page() {
     return (
@@ -70,8 +72,10 @@ export default function Page() {
                         </p>
                     </div>
                     {/* drop your next component here */}
-                    <div className="mt-6 h-16 rounded-xl border border-white/10 flex items-center justify-center">
-                        <span className="text-white/20 text-xs">component goes here</span>
+                    <div className="mt-2 h-4 rounded-xl border border-white/10 flex items-center justify-center">
+                        {/* <span className="text-white/20 text-xs">component goes here</span>
+                         */}
+                        <StatCounter />
                     </div>
                 </div>
 
@@ -94,7 +98,8 @@ export default function Page() {
                     </div>
                     {/* drop your next component here */}
                     <div className="mt-6 h-16 rounded-xl border border-white/10 flex items-center justify-center">
-                        <span className="text-white/20 text-xs">component goes here</span>
+                        {/* <span className="text-white/20 text-xs">component goes here</span> */}
+                        <ToastAnimator/>
                     </div>
                 </div>
 
