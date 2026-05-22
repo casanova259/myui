@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { IconCreditCard, IconCreditCardPay } from '@tabler/icons-react';
+import { IconLock } from '@tabler/icons-react';
+import { IconUserCheck } from '@tabler/icons-react';
+import { IconBolt } from '@tabler/icons-react';
 import { gsap } from "gsap";
 
+
 const toasts = [
-    { icon: "💳", title: "Payment received", sub: "$240.00 from Arjun S.", color: "bg-green-500/10 border-green-500/20" },
-    { icon: "🔐", title: "Login detected", sub: "New device • Mumbai, IN", color: "bg-blue-500/10 border-blue-500/20" },
-    { icon: "👤", title: "New user joined", sub: "Priya K. just signed up", color: "bg-purple-500/10 border-purple-500/20" },
-    { icon: "⚡", title: "Withdrawal processed", sub: "$80.00 sent successfully", color: "bg-amber-500/10 border-amber-500/20" },
+    { icon: <IconCreditCard />, title: "Payment received", sub: "$240.00 from Arjun S.", color: "bg-grey/70 border-white/40" },
+    { icon: <IconLock />, title: "Login detected", sub: "New device • Mumbai, IN", color: "bg-grey/10 border-white/40" },
+    { icon: <IconUserCheck />, title: "New user joined", sub: "Ram K. just signed up", color: "bg-grey-500/10 border-white/20" },
+    { icon: <IconBolt/>, title: "Withdrawal processed", sub: "$80.00 sent successfully", color: "bg-grey-500/10 border-white/20" },
 ];
 
 export default function ToastAnimator() {
@@ -66,8 +71,8 @@ export default function ToastAnimator() {
                         opacity-0
                     `}
                 >
-                    <span className="text-xl leading-none">{toast.icon}</span>
-                    <div className="flex flex-col">
+                    <span className="text-xl leading-none ml-2">{toast.icon}</span>
+                    <div className="flex flex-col gap-1 ml-4">
                         <span className="text-white text-sm font-medium leading-tight">
                             {toast.title}
                         </span>
