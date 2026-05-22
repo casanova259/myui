@@ -81,16 +81,16 @@ export default function Page() {
                 {/* Cell 3 — Placeholder */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
                     <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-xs uppercase tracking-widest">Analytics</span>
-                        <h2 className="text-white text-2xl font-semibold leading-tight">
+                        <span className="text-white/30 text-xl uppercase tracking-widest">Analytics</span>
+                        <h2 className="text-white text-3xl font-semibold leading-relaxed">
                             Real-time insights <br /> at a glance
                         </h2>
-                        <div className="flex flex-col gap-2 mt-2">
+                        {/* <div className="flex flex-col gap-2 mt-2">
                             <div className="h-[1px] w-3/4 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-2/3 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-4/5 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-1/2 bg-white/10 rounded-full" />
-                        </div>
+                        </div> */}
                         <p className="text-white/40 text-sm leading-relaxed mt-1">
                             Track every transaction and user <br /> action as it happens, live.
                         </p>
