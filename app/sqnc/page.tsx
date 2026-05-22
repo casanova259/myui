@@ -4,7 +4,8 @@ import FingerprintButton from "@/components/fingerprint/FIngerScan";
 import { AnimationSequences } from "@/components/animateSqnc/animateSqnc";
 import StatCounter from "@/components/counter/counter";
 import ToastAnimator from "@/components/toaster/toast";
-
+import { IconBellRinging, IconFingerprint } from '@tabler/icons-react';
+import { IconLockFilled } from '@tabler/icons-react';
 
 export default function Page() {
     return (
@@ -14,51 +15,69 @@ export default function Page() {
                 {/* Cell 1 — Pay Now / Pricing */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
                     <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-xs uppercase tracking-widest">Pricing</span>
-                        <h2 className="text-white text-2xl font-semibold leading-tight">
+                        <span className="text-white/30 text-xl uppercase tracking-widest font-semibold">Pricing</span>
+                        <h2 className="text-white text-3xl font-semibold leading-relaxed">
                             Simple, transparent <br /> pricing
                         </h2>
-                        <div className="flex flex-col gap-2 mt-2">
+                        {/* <div className="flex flex-col gap-2 mt-2">
                             <div className="h-[1px] w-3/4 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-2/3 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-4/5 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-1/2 bg-white/10 rounded-full" />
-                        </div>
-                        <p className="text-white/40 text-sm leading-relaxed mt-1">
+                        </div> */}
+                        <p className="text-white/40 text-md leading-relaxed mt-1">
                             One-click checkout. No hidden fees, <br /> no subscriptions unless you want one.
                         </p>
                     </div>
-                    <div className="mt-6">
+                    <div className="mt-2">
                         <AnimationSequences />
                     </div>
                 </div>
 
                 {/* Cell 2 — Fingerprint / Biometric */}
+                {/* Cell 2 — Biometric / Security */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
-                    <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-2xl font-semibold uppercase tracking-widest flex gap-2">
-                            Security
-                            <svg width="25" height="25" viewBox="0 0 20 25" fill="none" className="inline-block" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10.5 0.75C14.2279 0.75 17.25 3.77208 17.25 7.5C17.25 11.2279 14.2279 14.25 10.5 14.25C6.77208 14.25 3.75 11.2279 3.75 7.5C3.75 3.77208 6.77208 0.75 10.5 0.75Z" stroke="white" stroke-width="1.5" />
-                                <rect y="5" width="20" height="20" rx="2" fill="white" />
-                            </svg>
 
-                        </span>
+                    {/* Top */}
+                    <div className="flex flex-col gap-3">
+                        <div className="flex gap-2">
+                            <span className="text-white/30 text-2xl font-semibold uppercase tracking-widest flex items-center gap-2">
+                                Security
+                                {/* <svg width="22" height="22" viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.5 0.75C14.2279 0.75 17.25 3.77208 17.25 7.5C17.25 11.2279 14.2279 14.25 10.5 14.25C6.77208 14.25 3.75 11.2279 3.75 7.5C3.75 3.77208 6.77208 0.75 10.5 0.75Z" stroke="#575657" strokeWidth="1.5" />
+                                <rect y="5" width="20" height="20" rx="2" fill="#575657" />
+                            </svg> */}
+                            </span>
+
+                            <IconLockFilled/>
+                        </div>
+
                         <h2 className="text-white text-3xl font-semibold leading-tight">
                             Biometric Login <br /> & Verification
                         </h2>
-                        <div className="w-96  ">
-                            <p className="text-white/40 text-sm leading-relaxed mt-1  ">
-                                Your fingerprint is your password. <br /> Secure, Instant, and Always Private.
-                            </p>
+
+                        <p className="text-white/40 text-sm leading-relaxed mt-2">
+                            Your fingerprint is your password. <br /> Secure, Instant, and Always Private.
+                        </p>
+                    </div>
+
+                    {/* Bottom — two boxes */}
+                    <div className="flex gap-3 mt-6">
+
+                        {/* Left box — dark container, can hold extra info or leave minimal */}
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex flex-col justify-center min-h-[160px]">
+                            <span className="text-white/20 text-md uppercase tracking-widest">Touch ID</span>
+                            <span className="text-white/40 text-md  mt-1">Sensor active</span>
                         </div>
+
+                        {/* Right box — FingerprintButton */}
+                        <div className="flex-1 rounded-2xl  flex items-center justify-center min-h-[160px]">
+                            <FingerprintButton />
+                        </div>
+
                     </div>
 
-                    <div className="mt-6 flex items-center justify-end mb-6">
-                        <FingerprintButton />
-                    </div>
                 </div>
-
                 {/* Cell 3 — Placeholder */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
                     <div className="flex flex-col gap-3">
@@ -85,29 +104,34 @@ export default function Page() {
                 </div>
 
                 {/* Cell 4 — Placeholder */}
-                <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
-                    <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-xs uppercase tracking-widest">Notifications</span>
-                        <h2 className="text-white text-2xl font-semibold leading-tight">
+                <div className="bg-[#0f0f0f] p-8 flex flex-col gap-16 min-h-[400px]">
+                    <div className="flex flex-col gap-4">
+
+                        <div className="flex gap-2">
+                            <span className="text-white/30 text-xl uppercase tracking-widest font-semibold">
+                                Notifications
+                            </span>
+                            <IconBellRinging />
+                        </div>
+                        <h1 className="text-white text-3xl font-semibold leading-tight">
                             Stay in the loop, <br /> always
-                        </h2>
-                        <div className="flex flex-col gap-2 mt-2">
+                        </h1>
+                        {/* <div className="flex flex-col gap-2 mt-2">
                             <div className="h-[1px] w-3/4 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-2/3 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-4/5 bg-white/10 rounded-full" />
                             <div className="h-[1px] w-1/2 bg-white/10 rounded-full" />
-                        </div>
-                        <p className="text-white/40 text-sm leading-relaxed mt-1">
+                        </div> */}
+                        <p className="text-white/40 text-md leading-relaxed mt-1">
                             Push alerts, emails, or SMS — <br /> your choice, your control.
                         </p>
                     </div>
                     {/* drop your next component here */}
-                    <div className="mt-6 h-16 rounded-xl    flex items-center justify-center">
+                    <div className="mt-2 h-16 rounded-xl  flex items-center justify-center">
                         {/* <span className="text-white/20 text-xs">component goes here</span> */}
                         <ToastAnimator />
                     </div>
                 </div>
-
             </div>
         </div>
     );
