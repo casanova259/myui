@@ -32,7 +32,7 @@ export default function Home() {
             <SectionBaro/>
             <footer className="relative flex h-svh w-full items-center justify-center bg-[#0f0f0f] p-8 text-white">
                 <h1 className="text-center text-[clamp(3rem,10vw,8rem)] leading-none font-black tracking-[6px] uppercase font-monster-beast">
-                    IT IsN'T Over  <br />yet
+                    IT IsN&apos;T Over  <br />yet
                 </h1>
             
             </footer>
