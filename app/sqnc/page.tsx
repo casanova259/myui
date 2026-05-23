@@ -5,6 +5,7 @@ import { AnimationSequences } from "@/components/animateSqnc/animateSqnc";
 import ToastAnimator from "@/components/toaster/toast";
 import { IconBellRinging, IconFingerprint } from '@tabler/icons-react';
 import { IconLockFilled } from '@tabler/icons-react';
+import { IconCoinFilled } from '@tabler/icons-react';
 import { IconAlignBoxBottomRight } from '@tabler/icons-react';
 import BarChart from "@/components/BarChart/BarChart";
 
@@ -16,7 +17,11 @@ export default function Page() {
                 {/* Cell 1 — Pay Now / Pricing */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
                     <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-2xl uppercase tracking-widest font-semibold">Pricing</span>
+
+                        <div className="flex gap-2 items-start ">
+                            <span className="text-white/30 text-2xl uppercase tracking-widest font-semibold">Pricing</span>
+                            <IconCoinFilled/>
+                        </div>
                         <h2 className="text-white text-3xl font-semibold leading-relaxed tracking-wide">
                             Simple, Transparent <br /> Pricing
                         </h2>
@@ -90,10 +95,10 @@ export default function Page() {
                 </div>
                 {/* Cell 3 — Placeholder */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
-                    <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-3  pb-3">
                         <div className="flex gap-2">
                             <span className="text-white/30 text-xl uppercase tracking-widest font-semibold">Analytics</span>
-                            <IconAlignBoxBottomRight className="h-5 w-5 " stroke={2} />
+                            <IconAlignBoxBottomRight className="h-5 w-5" stroke={2} />
                         </div>
                         <h2 className="text-white text-3xl font-semibold leading-relaxed">
                             Real-time insights <br /> at a glance
@@ -101,7 +106,7 @@ export default function Page() {
                     </div>
 
                     {/* ✅ removed h-4 and items-center — let chart size itself */}
-                    <div className="w-full rounded-xl border border-white/10">
+                    <div className="w-full rounded-xl border border-white/10 ">
                         <BarChart />
                     </div>
                 </div>
