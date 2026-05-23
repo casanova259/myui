@@ -2,10 +2,11 @@
 
 import FingerprintButton from "@/components/fingerprint/FIngerScan";
 import { AnimationSequences } from "@/components/animateSqnc/animateSqnc";
-import StatCounter from "@/components/counter/counter";
 import ToastAnimator from "@/components/toaster/toast";
 import { IconBellRinging, IconFingerprint } from '@tabler/icons-react';
 import { IconLockFilled } from '@tabler/icons-react';
+import { IconAlignBoxBottomRight } from '@tabler/icons-react';
+import BarChart from "@/components/BarChart/BarChart";
 
 export default function Page() {
     return (
@@ -15,9 +16,9 @@ export default function Page() {
                 {/* Cell 1 — Pay Now / Pricing */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
                     <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-xl uppercase tracking-widest font-semibold">Pricing</span>
-                        <h2 className="text-white text-3xl font-semibold leading-relaxed">
-                            Simple, transparent <br /> pricing
+                        <span className="text-white/30 text-2xl uppercase tracking-widest font-semibold">Pricing</span>
+                        <h2 className="text-white text-3xl font-semibold leading-relaxed tracking-wide">
+                            Simple, Transparent <br /> Pricing
                         </h2>
                         {/* <div className="flex flex-col gap-2 mt-2">
                             <div className="h-[1px] w-3/4 bg-white/10 rounded-full" />
@@ -29,7 +30,7 @@ export default function Page() {
                             One-click checkout. No hidden fees, <br /> no subscriptions unless you want one.
                         </p>
                     </div>
-                    <div className="mt-2">
+                    <div className="mt-2 pb-4">
                         <AnimationSequences />
                     </div>
                 </div>
@@ -49,31 +50,40 @@ export default function Page() {
                             </svg> */}
                             </span>
 
-                            <IconLockFilled/>
+                            <IconLockFilled />
                         </div>
 
-                        <h2 className="text-white text-3xl font-semibold leading-tight">
+                        <h2 className="text-white text-3xl font-semibold leading-relaxed tracking-wide">
                             Biometric Login <br /> & Verification
                         </h2>
 
-                        <p className="text-white/40 text-sm leading-relaxed mt-2">
-                            Your fingerprint is your password. <br /> Secure, Instant, and Always Private.
-                        </p>
+                        <div className="w-full ">
+                            <p className="text-white/20 text-sm leading-relaxed  mt-2">
+                                Your fingerprint is your password. <br /> Secure, Instant, and Always Private.
+                            </p>
+                        </div>
+
                     </div>
 
                     {/* Bottom — two boxes */}
                     <div className="flex gap-3 mt-6">
 
                         {/* Left box — dark container, can hold extra info or leave minimal */}
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex flex-col justify-center min-h-[160px]">
-                            <span className="text-white/20 text-md uppercase tracking-widest">Touch ID</span>
-                            <span className="text-white/40 text-md  mt-1">Sensor active</span>
+                        <div className="rounded-2xl border border-neutral-100 transparent p-4 flex w-full  justify-center min-h-[160px] ">
+
+                            <div className="flex flex-col gap-2 items-center justify-center pl-2">
+                                <span className="text-white text-xl  tracking-wide">Touch ID Payments</span>
+                                <span className="text-neutral-200 text-md  mt-1">Sensor active</span>
+                            </div>
+
+                            <div className="flex-1 flex items-center justify-end">
+                                <FingerprintButton />
+                            </div>
+
                         </div>
 
                         {/* Right box — FingerprintButton */}
-                        <div className="flex-1 rounded-2xl  flex items-center justify-center min-h-[160px]">
-                            <FingerprintButton />
-                        </div>
+
 
                     </div>
 
@@ -81,25 +91,18 @@ export default function Page() {
                 {/* Cell 3 — Placeholder */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
                     <div className="flex flex-col gap-3">
-                        <span className="text-white/30 text-xl uppercase tracking-widest">Analytics</span>
+                        <div className="flex gap-2">
+                            <span className="text-white/30 text-xl uppercase tracking-widest font-semibold">Analytics</span>
+                            <IconAlignBoxBottomRight className="h-5 w-5 " stroke={2} />
+                        </div>
                         <h2 className="text-white text-3xl font-semibold leading-relaxed">
                             Real-time insights <br /> at a glance
                         </h2>
-                        {/* <div className="flex flex-col gap-2 mt-2">
-                            <div className="h-[1px] w-3/4 bg-white/10 rounded-full" />
-                            <div className="h-[1px] w-2/3 bg-white/10 rounded-full" />
-                            <div className="h-[1px] w-4/5 bg-white/10 rounded-full" />
-                            <div className="h-[1px] w-1/2 bg-white/10 rounded-full" />
-                        </div> */}
-                        <p className="text-white/40 text-sm leading-relaxed mt-1">
-                            Track every transaction and user <br /> action as it happens, live.
-                        </p>
                     </div>
-                    {/* drop your next component here */}
-                    <div className="mt-2 h-4 rounded-xl border border-white/10 flex items-center justify-center">
-                        {/* <span className="text-white/20 text-xs">component goes here</span>
-                         */}
-                        <StatCounter />
+
+                    {/* ✅ removed h-4 and items-center — let chart size itself */}
+                    <div className="w-full rounded-xl border border-white/10">
+                        <BarChart />
                     </div>
                 </div>
 
@@ -127,7 +130,7 @@ export default function Page() {
                         </p>
                     </div>
                     {/* drop your next component here */}
-                    <div className="mt-2 h-16 rounded-xl  flex items-center justify-center">
+                    <div className="mt-2 h-12 rounded-xl  flex items-center justify-center">
                         {/* <span className="text-white/20 text-xs">component goes here</span> */}
                         <ToastAnimator />
                     </div>
