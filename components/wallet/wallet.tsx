@@ -11,7 +11,7 @@ export default function WalletCard() {
                     height: "320px",
                     background: "#060606",
                     borderRadius: "41px",
-                    border: "1.5px solid #1a6bff",
+                    border: "1px solid #c8c8c8",
                 }}
             >
                 {/* Purple card (back) */}
@@ -42,11 +42,14 @@ export default function WalletCard() {
                     className="absolute left-0 right-0 bottom-0 z-[3]"
                     style={{
                         height: "58%",
-                        background: "#060606",
-                        clipPath:
-                            "polygon(0% 0%, 28% 0%, 34% 14%, 50% 18%, 66% 14%, 72% 0%, 100% 0%, 100% 100%, 0% 100%)",
                     }}
-                />
+                >
+
+                    <svg width="500" height="277" viewBox="0 0 801 277" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M70.6316 27.879C78.2644 8.59214 96.4872 -1.85957 115.368 0.273484H684.387C684.496 0.273486 684.606 0.275919 684.716 0.277391C703.606 -1.86856 721.842 8.58347 729.478 27.879L796.597 197.469C806.353 222.118 795.116 251.863 771.5 263.905L757.596 270.996C733.979 283.039 706.925 272.819 697.17 248.17L669.14 177.349H130.971L102.945 248.169C93.1902 272.819 66.1371 283.039 42.5203 270.997L28.615 263.907C4.99845 251.865 -6.23851 222.12 3.51641 197.471L70.6316 27.879Z" fill="black" />
+                    </svg>
+
+                </div>
 
                 {/* Amount label */}
                 <p

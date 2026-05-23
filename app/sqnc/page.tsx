@@ -12,7 +12,7 @@ import BarChart from "@/components/BarChart/BarChart";
 export default function Page() {
     return (
         <div className="min-h-screen bg-black flex items-center justify-center p-8">
-            <div className="grid grid-cols-2 gap-[1px] bg-white/10 rounded-2xl overflow-hidden w-full max-w-4xl">
+            <div className="grid grid-cols-2 gap-[1px] bg-white/10 rounded-2xl overflow-hidden w-full max-w-4xl h-full">
 
                 {/* Cell 1 — Pay Now / Pricing */}
                 <div className="bg-[#0f0f0f] p-8 flex flex-col justify-between min-h-[400px]">
