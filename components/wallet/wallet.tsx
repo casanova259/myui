@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { object } from "motion/react-client";
 import { useState } from "react";
 
 const CARDS = [
@@ -8,11 +9,12 @@ const CARDS = [
         id: "razorpay",
         bg: "#7b6ff0",
         zIndex: 1,
-        logo: "https://cdn.razorpay.com/logo.svg",
+        logo: "/Razor.png",
         logoHeight: "36px",
-        logoWidth: "72px",
+        logoWidth: "48px",
         amount: "$55,000",
         label: "Total Balance",
+        objectfit:"contain",
         textColor: "#ffffff",
         labelColor: "rgba(255,255,255,0.6)",
         stacked: { y: 0, rotate: 0, x: 0 },
@@ -25,6 +27,7 @@ const CARDS = [
         logo: "/images.png",
         logoHeight: "36px",
         logoWidth: "72px",
+        objectfit:"cover",
         // bigger since it's a raster PNG
         amount: "$50,000",
         label: "Total Balance",
@@ -128,7 +131,7 @@ export default function WalletCard() {
                                 right: "14px",
                                 height: card.logoHeight,
                                 width: "auto",
-                                objectFit: "cover",
+                                objectFit: `${card.objectfit}`,
                                 display: "block",
                                 width: card.logoWidth
                             }}
@@ -139,7 +142,7 @@ export default function WalletCard() {
                             <p
                                 style={{
                                     margin: 0,
-                                    fontSize: "1.25rem",
+                                    fontSize: "1.5rem",
                                     fontWeight: 700,
                                     color: card.textColor,
                                     fontFamily: '-apple-system, "SF Pro Display", "Helvetica Neue", sans-serif',
@@ -152,7 +155,7 @@ export default function WalletCard() {
                             <p
                                 style={{
                                     margin: "4px 0 0",
-                                    fontSize: "0.7rem",
+                                    fontSize: "1 rem",
                                     fontWeight: 500,
                                     color: card.labelColor,
                                     fontFamily: '-apple-system, "SF Pro Display", "Helvetica Neue", sans-serif',
