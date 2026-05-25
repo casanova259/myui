@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import { object } from "motion/react-client";
 import { useState } from "react";
 
 const CARDS = [
@@ -11,10 +10,10 @@ const CARDS = [
         zIndex: 1,
         logo: "/Razor.png",
         logoHeight: "36px",
-        logoWidth: "48px",
+        logoW: "48px",
         amount: "$55,000",
         label: "Total Balance",
-        objectfit:"contain",
+        fit:"contain",
         textColor: "#ffffff",
         labelColor: "rgba(255,255,255,0.6)",
         stacked: { y: 0, rotate: 0, x: 0 },
@@ -26,8 +25,8 @@ const CARDS = [
         zIndex: 2,
         logo: "/images.png",
         logoHeight: "36px",
-        logoWidth: "72px",
-        objectfit:"cover",
+        logoW: "72px",
+        fit:"cover",
         // bigger since it's a raster PNG
         amount: "$50,000",
         label: "Total Balance",
@@ -71,7 +70,7 @@ export default function WalletCard() {
                 >
                     {/* Tray SVG — safely clipped inside inner tile */}
                     <svg
-                        className="absolute left-0 bottom-0 z-[3]"
+                        className="absolute left-0 bottom-0 z-3"
                         width="100%"
                         height="150"
                         viewBox="0 0 801 277"
@@ -130,10 +129,9 @@ export default function WalletCard() {
                                 top: "14px",
                                 right: "14px",
                                 height: card.logoHeight,
-                                width: "auto",
-                                objectFit: `${card.objectfit}`,
+                                objectFit: `${card.fit}`,
                                 display: "block",
-                                width: card.logoWidth
+                                width: card.logoW
                             }}
                         />
 
