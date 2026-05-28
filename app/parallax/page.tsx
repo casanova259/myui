@@ -132,7 +132,7 @@ const rowData = [
 ];
 
 export default function ParallaxGallery() {
-    const scrollTrackRef = useRef<HTMLSectionElement>(null);
+    const scrollTrackRef = useRef<HTMLElement>(null);
     const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
 
     const scrollState = useRef({
