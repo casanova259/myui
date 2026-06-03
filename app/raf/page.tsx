@@ -41,7 +41,7 @@ export default function TraceDepthScroll() {
             description: "The engine runs the visual input through advanced computational models. Using state machine logic, it maps the underlying geometry to create a mathematically precise vector framework before rendering.",
             imagePlaceholder: "bg-zinc-800 border-zinc-700"
             ,
-            comp:<ComputationDemo/>
+            comp:<SystemStateCard/>
         },
         {
             id: 3,

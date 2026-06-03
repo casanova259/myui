@@ -3,7 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-// ── 1. Hex Data Scrambler ──────────────────────────────────────────────
+// ============================================================================
+// 1. STANDALONE MICRO-COMPONENTS (Drop these anywhere in your app)
+// ============================================================================
+
 export function DataScrambler() {
     const [text, setText] = useState("0x0000");
 
@@ -24,14 +27,12 @@ export function DataScrambler() {
     );
 }
 
-// ── 2. Random Activity Bars ────────────────────────────────────────────
 export function ActivityBars() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
             const bars = gsap.utils.toArray<HTMLDivElement>(".mini-bar");
-
             gsap.to(bars, {
                 scaleY: "random(0.2, 1)",
                 duration: 0.2,
@@ -41,60 +42,37 @@ export function ActivityBars() {
                 ease: "none"
             });
         }, containerRef);
-
         return () => ctx.revert();
     }, []);
 
     return (
         <div ref={containerRef} className="flex items-end gap-[2px] h-2.5 w-4 opacity-80">
             {[1, 2, 3, 4].map((i) => (
-                <div
-                    key={i}
-                    className="mini-bar w-[3px] h-full bg-[#5dcaa5] rounded-sm origin-bottom"
-                />
+                <div key={i} className="mini-bar w-[3px] h-full bg-[#5dcaa5] rounded-sm origin-bottom" />
             ))}
         </div>
     );
 }
 
-// ── 3. Subtle Processing Ring ──────────────────────────────────────────
 export function ProcessingRing() {
     const ringRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {
-        gsap.to(ringRef.current, {
-            rotation: 360,
-            duration: 8,
-            repeat: -1,
-            ease: "linear"
-        });
+        gsap.to(ringRef.current, { rotation: 360, duration: 8, repeat: -1, ease: "linear" });
     }, []);
 
     return (
-        <svg
-            ref={ringRef}
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            className="opacity-70"
-        >
+        <svg ref={ringRef} width="14" height="14" viewBox="0 0 24 24" fill="none" className="opacity-70">
             <circle cx="12" cy="12" r="10" stroke="#3E3E44" strokeWidth="2.5" />
-            <circle
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="#5dcaa5"
-                strokeWidth="2.5"
-                strokeDasharray="16 32"
-                strokeLinecap="round"
-            />
+            <circle cx="12" cy="12" r="10" stroke="#5dcaa5" strokeWidth="2.5" strokeDasharray="16 32" strokeLinecap="round" />
         </svg>
     );
 }
 
 
-// ── MAIN COMPONENT ─────────────────────────────────────────────────────
+// ============================================================================
+// 2. PURE SYSTEM STATE CARD (No computations baked in)
+// ============================================================================
 
 export default function SystemStateCard() {
     const cardRef = useRef<HTMLDivElement>(null);
@@ -104,21 +82,14 @@ export default function SystemStateCard() {
         if (!cardRef.current || !svgRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Ambient floating animation for the cubes
             const blocks = gsap.utils.toArray<SVGGElement>(".iso-block");
 
             blocks.forEach((block, i) => {
                 gsap.to(block, {
-                    y: "-=6",
-                    duration: 2 + (i % 3) * 0.5,
-                    yoyo: true,
-                    repeat: -1,
-                    ease: "sine.inOut",
-                    delay: i * 0.2,
+                    y: "-=6", duration: 2 + (i % 3) * 0.5, yoyo: true, repeat: -1, ease: "sine.inOut", delay: i * 0.2,
                 });
             });
 
-            // SVG Hover Scale (Card hover styles are handled by Tailwind)
             const card = cardRef.current;
             const handleMouseEnter = () => {
                 gsap.to(blocks, { scale: 1.02, transformOrigin: "center center", duration: 0.4, ease: "back.out(1.5)" });
@@ -142,17 +113,15 @@ export default function SystemStateCard() {
     return (
         <div
             ref={cardRef}
-            className="w-full bg-[#08090A] border border-[#1a1a1c] hover:border-[#3E3E44] hover:-translate-y-1 rounded-2xl p-6 flex flex-col gap-6 font-sans cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_32px_rgba(93,202,165,0.15)] transition-all duration-300 box-border"
+            className="w-full bg-[#08090A] border border-dashed border-[#2E2E32] hover:border-[#4A4A52] hover:-translate-y-1 rounded-2xl p-6 md:p-8 flex flex-col gap-6 font-sans cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_32px_rgba(93,202,165,0.15)] transition-all duration-300 box-border"
         >
             {/* Header */}
             <div className="flex justify-between items-start flex-wrap gap-2">
                 <div>
-                    <h3 className="m-0 text-[#e1f5ee] text-sm font-semibold tracking-wider">CLUSTER STATE</h3>
+                    <h3 className="m-0 text-[#e1f5ee] text-sm md:text-base font-semibold tracking-wider">CLUSTER STATE</h3>
                     <p className="m-0 mt-1 text-[#666] text-xs">NODE-GROUP ALPHA</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    {/* Integrated Processing Ring */}
-                    <ProcessingRing />
                     <div className="flex items-center gap-1.5 bg-[#1d9e75]/10 px-2.5 py-1 rounded-full border border-[#1d9e75]/20">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#5dcaa5] shadow-[0_0_8px_#5dcaa5]" />
                         <span className="text-[10px] text-[#5dcaa5] font-semibold tracking-wide">OPTIMAL</span>
@@ -161,11 +130,11 @@ export default function SystemStateCard() {
             </div>
 
             {/* SVG Visual Area */}
-            <div className="w-full flex justify-center items-center relative py-2">
+            <div className="w-full flex justify-center items-center relative py-4 md:py-8">
                 <svg
                     ref={svgRef}
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-full h-auto max-w-[260px] overflow-visible"
+                    className="w-full h-auto max-w-[280px] overflow-visible"
                     viewBox="0 0 304 281"
                     fill="none"
                 >
@@ -260,18 +229,14 @@ export default function SystemStateCard() {
                 </svg>
             </div>
 
-            {/* Footer / Metrics - Now with 4 columns to fit the new animations */}
+            {/* Footer / Metrics - Restored to static text */}
             <div className="grid grid-cols-[repeat(auto-fit,minmax(60px,1fr))] gap-4 border-t border-[#1a1a1c] pt-4">
                 <div>
                     <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">UPTIME</p>
                     <p className="m-0 mt-1.5 text-[#e1f5ee] text-[13px] font-medium">99.98%</p>
                 </div>
                 <div>
-                    <div className="flex items-center gap-2">
-                        <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">LOAD</p>
-                        {/* Integrated Activity Bars */}
-                        <ActivityBars />
-                    </div>
+                    <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">LOAD</p>
                     <p className="m-0 mt-1.5 text-[#e1f5ee] text-[13px] font-medium">24.1 TB/s</p>
                 </div>
                 <div>
@@ -280,10 +245,7 @@ export default function SystemStateCard() {
                 </div>
                 <div>
                     <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">MEM</p>
-                    <div className="mt-1">
-                        {/* Integrated Hex Scrambler */}
-                        <DataScrambler />
-                    </div>
+                    <p className="m-0 mt-1.5 text-[#e1f5ee] text-[13px] font-medium">1.2 TB</p>
                 </div>
             </div>
         </div>
