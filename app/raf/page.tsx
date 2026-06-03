@@ -5,6 +5,9 @@ import { Inter } from 'next/font/google';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LenisSmoothScroll from '@/components/SmoothScroll/lenis';
+import { MomentumChart } from '@/components/momentumgraph/momentumgraph';
+import RawCanvas from '@/components/momentumgraph/scrib';
+import StateProcessing from '@/components/momentumgraph/statecom';
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -24,7 +27,8 @@ export default function TraceDepthScroll() {
             step: "Phase 01 // Ingestion",
             title: "The Raw Canvas",
             description: "Upload your hand-drawn pencil illustrations directly on notebook paper. Trace instantly parses your red and yellow pen annotations, rough doodles, and directional arrows to understand your layout intent.",
-            imagePlaceholder: "bg-[#f4f1ea] border-zinc-300"
+            imagePlaceholder: "bg-[#f4f1ea] border-zinc-300",
+            comp:<RawCanvas/>
         },
         {
             id: 2,
@@ -34,6 +38,8 @@ export default function TraceDepthScroll() {
             title: "State Processing",
             description: "The engine runs the visual input through advanced computational models. Using state machine logic, it maps the underlying geometry to create a mathematically precise vector framework before rendering.",
             imagePlaceholder: "bg-zinc-800 border-zinc-700"
+            ,
+            comp:<StateProcessing/>
         },
         {
             id: 3,
@@ -51,7 +57,8 @@ export default function TraceDepthScroll() {
             step: "The Core // Trace",
             title: "Perfect Preservation",
             description: "The final editorial asset emerges with sharp focus. The original identity—facial structure, eyes, nose, lips, skin tone, and expression—is preserved exactly, elevated to an ultra-realistic masterpiece.",
-            imagePlaceholder: "bg-zinc-950 border-zinc-800"
+            imagePlaceholder: "bg-zinc-950 border-zinc-800",
+            comp:<MomentumChart/>
         },
     ];
 
@@ -132,10 +139,10 @@ export default function TraceDepthScroll() {
                         {/* Right Side: Massive Image Placeholder */}
                         <div className={`w-full md:w-1/2 h-48 md:h-full mt-8 md:mt-0 rounded-2xl border-2 border-dashed ${section.imagePlaceholder} flex flex-col items-center justify-center relative overflow-hidden`}>
                             <span className="text-sm font-semibold opacity-40 block mb-2 tracking-wide uppercase">
-                                Visual Asset
+                                Ingestion
                             </span>
-                            <span className="text-xs opacity-30 text-center px-4 font-medium">
-                                (Drop image or UI component here)
+                            <span className="text-xs text-center px-4 font-medium">
+                                {section.comp}
                             </span>
                         </div>
                     </div>
