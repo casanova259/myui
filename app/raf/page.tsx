@@ -8,6 +8,8 @@ import LenisSmoothScroll from '@/components/SmoothScroll/lenis';
 import { MomentumChart } from '@/components/momentumgraph/momentumgraph';
 import RawCanvas from '@/components/momentumgraph/scrib';
 import StateProcessing from '@/components/momentumgraph/statecom';
+import SystemStateCard from '@/components/momentumgraph/statecom';
+import ComputationDemo from '@/components/momentumgraph/statecom';
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -39,7 +41,7 @@ export default function TraceDepthScroll() {
             description: "The engine runs the visual input through advanced computational models. Using state machine logic, it maps the underlying geometry to create a mathematically precise vector framework before rendering.",
             imagePlaceholder: "bg-zinc-800 border-zinc-700"
             ,
-            comp:<StateProcessing/>
+            comp:<ComputationDemo/>
         },
         {
             id: 3,
@@ -141,9 +143,9 @@ export default function TraceDepthScroll() {
                             <span className="text-sm font-semibold opacity-40 block mb-2 tracking-wide uppercase">
                                 Ingestion
                             </span>
-                            <span className="text-xs text-center px-4 font-medium">
+                            <div className="text-xs text-center w-full h-auto font-medium">
                                 {section.comp}
-                            </span>
+                            </div>
                         </div>
                     </div>
                 ))}

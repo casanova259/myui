@@ -3,346 +3,288 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface StrokePath {
-    d: string;
-    color: string;
-    width: number;
-}
-
-// ─── Sketch strokes ───────────────────────────────────────────────────────────
-
-const SKETCH_STROKES: StrokePath[] = [
-    // outer card
-    { d: "M 44 28 L 576 28 L 576 372 L 44 372 Z", color: "#666", width: 1.8 },
-    // heading blob
-    { d: "M 64 72 Q 66 68 280 70 Q 282 74 280 78 Q 66 76 64 78 Z", color: "#222", width: 2.8 },
-    // heading line 2
-    { d: "M 64 100 Q 66 96 320 98 Q 322 102 320 106 Q 66 104 64 106 Z", color: "#222", width: 2.8 },
-    // body text line 1
-    { d: "M 64 132 Q 66 129 360 131 Q 362 135 360 137 Q 66 135 64 137 Z", color: "#555", width: 1.4 },
-    { d: "M 64 150 Q 66 147 340 149 Q 342 153 340 155 Q 66 153 64 155 Z", color: "#555", width: 1.4 },
-    { d: "M 64 168 Q 66 165 350 167 Q 352 171 350 173 Q 66 171 64 173 Z", color: "#555", width: 1.4 },
-    { d: "M 64 186 Q 66 183 300 185 Q 302 189 300 191 Q 66 189 64 191 Z", color: "#555", width: 1.4 },
-    // right panel border (dashed)
-    { d: "M 380 60 L 564 60 L 564 360 L 380 360 Z", color: "#666", width: 1.6 },
-    // nodes inside panel (rough circles)
-    { d: "M 430 130 m -18 0 a 18 18 0 1 0 36 0 a 18 18 0 1 0 -36 0", color: "#888", width: 1.5 },
-    { d: "M 514 130 m -18 0 a 18 18 0 1 0 36 0 a 18 18 0 1 0 -36 0", color: "#888", width: 1.5 },
-    { d: "M 472 210 m -18 0 a 18 18 0 1 0 36 0 a 18 18 0 1 0 -36 0", color: "#888", width: 1.5 },
-    { d: "M 430 290 m -18 0 a 18 18 0 1 0 36 0 a 18 18 0 1 0 -36 0", color: "#888", width: 1.5 },
-    { d: "M 514 290 m -18 0 a 18 18 0 1 0 36 0 a 18 18 0 1 0 -36 0", color: "#888", width: 1.5 },
-    // connecting lines between nodes
-    { d: "M 448 130 L 496 130", color: "#c0392b", width: 1.4 },
-    { d: "M 440 145 L 466 195", color: "#888", width: 1.4 },
-    { d: "M 504 145 L 478 195", color: "#888", width: 1.4 },
-    { d: "M 460 225 L 434 275", color: "#888", width: 1.4 },
-    { d: "M 484 225 L 510 275", color: "#888", width: 1.4 },
-    // red annotation arrow
-    { d: "M 370 160 L 348 148 L 355 155 M 348 148 L 356 142", color: "#e74c3c", width: 1.8 },
-    // yellow scribble under heading
-    { d: "M 64 66 Q 140 60 220 64 Q 222 72 220 78 Q 140 74 64 70 Z", color: "#f39c12", width: 1.2 },
-    // node labels
-];
-
-// ─── State machine nodes ──────────────────────────────────────────────────────
-
-const NODES = [
-    { id: "n0", cx: 430, cy: 130, label: "INIT", sublabel: "boot", color: "#6366f1" },
-    { id: "n1", cx: 514, cy: 130, label: "PARSE", sublabel: "tokenise", color: "#8b5cf6" },
-    { id: "n2", cx: 472, cy: 210, label: "MAP", sublabel: "geometry", color: "#0f6e56" },
-    { id: "n3", cx: 430, cy: 295, label: "RENDER", sublabel: "vectors", color: "#0f6e56" },
-    { id: "n4", cx: 514, cy: 295, label: "OUTPUT", sublabel: "emit", color: "#0891b2" },
-];
-
-const EDGES = [
-    { from: 0, to: 1, label: "input" },
-    { from: 0, to: 2, label: "" },
-    { from: 1, to: 2, label: "" },
-    { from: 2, to: 3, label: "mapped" },
-    { from: 2, to: 4, label: "" },
-    { from: 3, to: 4, label: "done" },
-];
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function getTotalLength(el: SVGPathElement | SVGLineElement | null): number {
-    if (!el) return 200;
-    try { return (el as SVGPathElement).getTotalLength(); } catch { return 200; }
-}
-
-function edgePath(from: typeof NODES[0], to: typeof NODES[0]): string {
-    const dx = to.cx - from.cx;
-    const dy = to.cy - from.cy;
-    const mx = from.cx + dx * 0.5;
-    const my = from.cy + dy * 0.5 - 18;
-    return `M ${from.cx} ${from.cy + 20} Q ${mx} ${my} ${to.cx} ${to.cy - 20}`;
-}
-
-// ─── Component ────────────────────────────────────────────────────────────────
-
-type Phase = "idle" | "sketching" | "transforming" | "polished";
-
-export default function StateProcessing() {
-    const sketchGroupRef = useRef<SVGGElement>(null);
-    const polishedGroupRef = useRef<SVGGElement>(null);
-    const strokeRefs = useRef<(SVGPathElement | null)[]>([]);
-    const tlRef = useRef<gsap.core.Timeline | null>(null);
-    const [phase, setPhase] = useState<Phase>("idle");
-    const [ready, setReady] = useState(false);
-
-    // node + edge refs for individual animation
-    const nodeRefs = useRef<(SVGGElement | null)[]>([]);
-    const edgeRefs = useRef<(SVGPathElement | null)[]>([]);
-
-    useEffect(() => { setReady(true); }, []);
-
-    const runAnimation = () => {
-        if (tlRef.current) tlRef.current.kill();
-
-        // ── reset sketch ──
-        gsap.set(sketchGroupRef.current, { opacity: 0 });
-        strokeRefs.current.forEach((el) => {
-            if (!el) return;
-            const len = getTotalLength(el);
-            gsap.set(el, { strokeDasharray: len, strokeDashoffset: len });
-        });
-
-        // ── reset polished ──
-        gsap.set(polishedGroupRef.current, { opacity: 0 });
-        const polishedEl = polishedGroupRef.current;
-        if (polishedEl) {
-            // static bg children
-            ["bg", "grid", "left-content", "panel-border"].forEach((id) => {
-                const el = polishedEl.querySelector(`#${id}`);
-                if (el) gsap.set(el, { opacity: 0 });
-            });
-        }
-        nodeRefs.current.forEach((el) => el && gsap.set(el, { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }));
-        edgeRefs.current.forEach((el) => {
-            if (!el) return;
-            const len = getTotalLength(el);
-            gsap.set(el, { strokeDasharray: len, strokeDashoffset: len, opacity: 0 });
-        });
-
-        const tl = gsap.timeline({ onStart: () => setPhase("sketching") });
-        tlRef.current = tl;
-
-        // 1 ── sketch in
-        tl.to(sketchGroupRef.current, { opacity: 1, duration: 0.2, ease: "power2.out" });
-        strokeRefs.current.forEach((el, i) => {
-            if (!el) return;
-            const len = getTotalLength(el);
-            const dur = 0.18 + (len / 700) * 0.4;
-            tl.to(el, { strokeDashoffset: 0, duration: dur, ease: "none" }, i === 0 ? "+=0.1" : "-=0.04");
-        });
-
-        // 2 ── hold
-        tl.to({}, { duration: 0.65 });
-
-        // 3 ── transform
-        tl.addLabel("transform")
-            .call(() => setPhase("transforming"))
-            .to(sketchGroupRef.current, { opacity: 0, duration: 0.5, ease: "power2.inOut" }, "transform")
-            .set(polishedGroupRef.current, { opacity: 1 }, "transform+=0.45");
-
-        // 4 ── bg + left content
-        tl.addLabel("build", "transform+=0.48");
-        ["bg", "grid"].forEach((id, i) => {
-            const el = polishedGroupRef.current?.querySelector(`#${id}`);
-            if (el) tl.to(el, { opacity: 1, duration: 0.3 }, `build+=${i * 0.05}`);
-        });
-        const leftEl = polishedGroupRef.current?.querySelector("#left-content");
-        if (leftEl) {
-            tl.to(leftEl, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, "build+=0.1");
-            gsap.set(leftEl, { y: 10 });
-        }
-        const borderEl = polishedGroupRef.current?.querySelector("#panel-border");
-        if (borderEl) tl.to(borderEl, { opacity: 1, duration: 0.3 }, "build+=0.15");
-
-        // 5 ── nodes pop in one by one
-        tl.addLabel("nodes", "build+=0.4");
-        nodeRefs.current.forEach((el, i) => {
-            if (!el) return;
-            tl.to(el, { opacity: 1, scale: 1, duration: 0.38, ease: "back.out(1.6)" }, `nodes+=${i * 0.12}`);
-        });
-
-        // 6 ── edges draw in
-        tl.addLabel("edges", "nodes+=0.55");
-        edgeRefs.current.forEach((el, i) => {
-            if (!el) return;
-            const len = getTotalLength(el);
-            tl.to(el, { strokeDashoffset: 0, opacity: 1, duration: 0.35, ease: "power2.inOut" }, `edges+=${i * 0.1}`);
-        });
-
-        tl.call(() => setPhase("polished"));
-    };
+// ── 1. Hex Data Scrambler ──────────────────────────────────────────────
+export function DataScrambler() {
+    const [text, setText] = useState("0x0000");
 
     useEffect(() => {
-        if (!ready) return;
-        const t = setTimeout(runAnimation, 500);
-        return () => clearTimeout(t);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ready]);
+        const chars = "0123456789ABCDEF";
+        const scramble = setInterval(() => {
+            const randomHex = Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * 16)]).join("");
+            setText(`0x${randomHex}`);
+        }, 60);
 
-    const phaseLabel: Record<Phase, string> = {
-        idle: "—",
-        sketching: "sketching…",
-        transforming: "structuring…",
-        polished: "rendered",
-    };
+        return () => clearInterval(scramble);
+    }, []);
 
     return (
-        <div style={{ background: "#111", borderRadius: 20, padding: "2rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem", fontFamily: "system-ui, sans-serif" }}>
+        <span className="font-mono text-[13px] font-medium tracking-wider text-[#5dcaa5]/80">
+            {text}
+        </span>
+    );
+}
 
-            <div style={{ width: "100%", maxWidth: 620, borderRadius: 14, overflow: "hidden", position: "relative", aspectRatio: "620/400" }}>
-                <svg viewBox="0 0 620 400" width="100%" style={{ display: "block" }} xmlns="http://www.w3.org/2000/svg">
+// ── 2. Random Activity Bars ────────────────────────────────────────────
+export function ActivityBars() {
+    const containerRef = useRef<HTMLDivElement>(null);
 
-                    {/* ── notebook paper ── */}
-                    <rect width="620" height="400" fill="#faf9f6" />
-                    {Array.from({ length: 11 }, (_, i) => (
-                        <line key={i} x1={0} y1={36 + i * 36} x2={620} y2={36 + i * 36} stroke="#e8e4dc" strokeWidth={0.7} />
-                    ))}
-                    <line x1={44} y1={0} x2={44} y2={400} stroke="#d0e8f5" strokeWidth={1.2} />
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            const bars = gsap.utils.toArray<HTMLDivElement>(".mini-bar");
 
-                    {/* ── sketch layer ── */}
-                    <g ref={sketchGroupRef} style={{ opacity: 0 }}>
-                        {SKETCH_STROKES.map((s, i) => (
-                            <path key={i} ref={(el) => { strokeRefs.current[i] = el; }} d={s.d}
-                                fill="none" stroke={s.color} strokeWidth={s.width} strokeLinecap="round" strokeLinejoin="round" />
-                        ))}
-                        <text x="412" y="128" fontSize={9} fill="#888" fontFamily="system-ui,sans-serif" textAnchor="middle">A</text>
-                        <text x="496" y="128" fontSize={9} fill="#888" fontFamily="system-ui,sans-serif" textAnchor="middle">B</text>
-                        <text x="454" y="208" fontSize={9} fill="#888" fontFamily="system-ui,sans-serif" textAnchor="middle">C</text>
-                        <text x="412" y="288" fontSize={9} fill="#888" fontFamily="system-ui,sans-serif" textAnchor="middle">D</text>
-                        <text x="496" y="288" fontSize={9} fill="#888" fontFamily="system-ui,sans-serif" textAnchor="middle">E</text>
-                        <text x="64" y="220" fontSize={9} fill="#888" fontFamily="system-ui,sans-serif">state diagram</text>
+            gsap.to(bars, {
+                scaleY: "random(0.2, 1)",
+                duration: 0.2,
+                repeat: -1,
+                yoyo: true,
+                stagger: { amount: 0.3, from: "random" },
+                ease: "none"
+            });
+        }, containerRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    return (
+        <div ref={containerRef} className="flex items-end gap-[2px] h-2.5 w-4 opacity-80">
+            {[1, 2, 3, 4].map((i) => (
+                <div
+                    key={i}
+                    className="mini-bar w-[3px] h-full bg-[#5dcaa5] rounded-sm origin-bottom"
+                />
+            ))}
+        </div>
+    );
+}
+
+// ── 3. Subtle Processing Ring ──────────────────────────────────────────
+export function ProcessingRing() {
+    const ringRef = useRef<SVGSVGElement>(null);
+
+    useEffect(() => {
+        gsap.to(ringRef.current, {
+            rotation: 360,
+            duration: 8,
+            repeat: -1,
+            ease: "linear"
+        });
+    }, []);
+
+    return (
+        <svg
+            ref={ringRef}
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="opacity-70"
+        >
+            <circle cx="12" cy="12" r="10" stroke="#3E3E44" strokeWidth="2.5" />
+            <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="#5dcaa5"
+                strokeWidth="2.5"
+                strokeDasharray="16 32"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
+
+
+// ── MAIN COMPONENT ─────────────────────────────────────────────────────
+
+export default function SystemStateCard() {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const svgRef = useRef<SVGSVGElement>(null);
+
+    useEffect(() => {
+        if (!cardRef.current || !svgRef.current) return;
+
+        const ctx = gsap.context(() => {
+            // Ambient floating animation for the cubes
+            const blocks = gsap.utils.toArray<SVGGElement>(".iso-block");
+
+            blocks.forEach((block, i) => {
+                gsap.to(block, {
+                    y: "-=6",
+                    duration: 2 + (i % 3) * 0.5,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: "sine.inOut",
+                    delay: i * 0.2,
+                });
+            });
+
+            // SVG Hover Scale (Card hover styles are handled by Tailwind)
+            const card = cardRef.current;
+            const handleMouseEnter = () => {
+                gsap.to(blocks, { scale: 1.02, transformOrigin: "center center", duration: 0.4, ease: "back.out(1.5)" });
+            };
+            const handleMouseLeave = () => {
+                gsap.to(blocks, { scale: 1, duration: 0.4, ease: "power2.out" });
+            };
+
+            card.addEventListener("mouseenter", handleMouseEnter);
+            card.addEventListener("mouseleave", handleMouseLeave);
+
+            return () => {
+                card.removeEventListener("mouseenter", handleMouseEnter);
+                card.removeEventListener("mouseleave", handleMouseLeave);
+            };
+        }, cardRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    return (
+        <div
+            ref={cardRef}
+            className="w-full bg-[#08090A] border border-[#1a1a1c] hover:border-[#3E3E44] hover:-translate-y-1 rounded-2xl p-6 flex flex-col gap-6 font-sans cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_32px_rgba(93,202,165,0.15)] transition-all duration-300 box-border"
+        >
+            {/* Header */}
+            <div className="flex justify-between items-start flex-wrap gap-2">
+                <div>
+                    <h3 className="m-0 text-[#e1f5ee] text-sm font-semibold tracking-wider">CLUSTER STATE</h3>
+                    <p className="m-0 mt-1 text-[#666] text-xs">NODE-GROUP ALPHA</p>
+                </div>
+                <div className="flex items-center gap-3">
+                    {/* Integrated Processing Ring */}
+                    <ProcessingRing />
+                    <div className="flex items-center gap-1.5 bg-[#1d9e75]/10 px-2.5 py-1 rounded-full border border-[#1d9e75]/20">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#5dcaa5] shadow-[0_0_8px_#5dcaa5]" />
+                        <span className="text-[10px] text-[#5dcaa5] font-semibold tracking-wide">OPTIMAL</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* SVG Visual Area */}
+            <div className="w-full flex justify-center items-center relative py-2">
+                <svg
+                    ref={svgRef}
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-full h-auto max-w-[260px] overflow-visible"
+                    viewBox="0 0 304 281"
+                    fill="none"
+                >
+                    {/* Top Back Block */}
+                    <g className="iso-block">
+                        <path fill="#08090A" stroke="#D0D6E0" strokeWidth="0.5" d="M148.534 1.068a7.75 7.75 0 0 1 6.932 0l50.211 25.106a3.75 3.75 0 0 1 2.073 3.354v125.056c0 1.42-.803 2.718-2.073 3.354l-50.211 25.105a7.75 7.75 0 0 1-6.932 0l-50.21-25.105a3.75 3.75 0 0 1-2.074-3.354V29.528a3.75 3.75 0 0 1 2.073-3.354z"></path>
+                        <path stroke="#2E2E32" strokeLinecap="round" strokeWidth="0.5" d="m102 30.056 46.422 23.21a8 8 0 0 0 7.156 0L202 30.057"></path>
                     </g>
 
-                    {/* ── polished layer ── */}
-                    <g ref={polishedGroupRef} style={{ opacity: 0 }}>
-
-                        {/* dark bg */}
-                        <rect id="bg" x={0} y={0} width={620} height={400} fill="#0f1117" />
-
-                        {/* subtle dot grid */}
-                        <g id="grid">
-                            {Array.from({ length: 15 }, (_, col) =>
-                                Array.from({ length: 10 }, (_, row) => (
-                                    <circle key={`${col}-${row}`} cx={col * 44 + 10} cy={row * 44 + 10} r={0.7} fill="#ffffff" fillOpacity={0.06} />
-                                ))
-                            )}
-                        </g>
-
-                        {/* left text content */}
-                        <g id="left-content">
-                            {/* phase tag */}
-                            <text x={36} y={52} fontSize={9} fill="#6b7280" fontFamily="system-ui,sans-serif" letterSpacing="0.12em">PHASE 02 // STRUCTURE</text>
-                            {/* big heading */}
-                            <text x={36} y={100} fontSize={38} fontWeight={800} fill="#f9fafb" fontFamily="system-ui,sans-serif">State</text>
-                            <text x={36} y={148} fontSize={38} fontWeight={800} fill="#f9fafb" fontFamily="system-ui,sans-serif">Processing</text>
-                            {/* body */}
-                            <text x={36} y={186} fontSize={12} fill="#9ca3af" fontFamily="system-ui,sans-serif">The engine runs the visual input through</text>
-                            <text x={36} y={204} fontSize={12} fill="#9ca3af" fontFamily="system-ui,sans-serif">advanced computational models. Using</text>
-                            <text x={36} y={222} fontSize={12} fill="#9ca3af" fontFamily="system-ui,sans-serif">state machine logic, it maps the</text>
-                            <text x={36} y={240} fontSize={12} fill="#9ca3af" fontFamily="system-ui,sans-serif">underlying geometry to create a</text>
-                            <text x={36} y={258} fontSize={12} fill="#9ca3af" fontFamily="system-ui,sans-serif">mathematically precise vector framework</text>
-                            <text x={36} y={276} fontSize={12} fill="#9ca3af" fontFamily="system-ui,sans-serif">before rendering.</text>
-                            {/* bottom stat chips */}
-                            <rect x={36} y={310} width={72} height={22} rx={11} fill="#1f2937" />
-                            <text x={72} y={325} fontSize={9} fill="#6b7280" fontFamily="system-ui,sans-serif" textAnchor="middle">5 states</text>
-                            <rect x={116} y={310} width={72} height={22} rx={11} fill="#1f2937" />
-                            <text x={152} y={325} fontSize={9} fill="#6b7280" fontFamily="system-ui,sans-serif" textAnchor="middle">6 transitions</text>
-                            <rect x={196} y={310} width={72} height={22} rx={11} fill="#1f2937" />
-                            <text x={232} y={325} fontSize={9} fill="#6b7280" fontFamily="system-ui,sans-serif" textAnchor="middle">deterministic</text>
-                            {/* footer */}
-                            <text x={36} y={370} fontSize={9} fill="#374151" fontFamily="system-ui,sans-serif">v2.4.1 // state-engine core</text>
-                        </g>
-
-                        {/* panel border */}
-                        <rect id="panel-border" x={340} y={20} width={264} height={360} rx={12}
-                            fill="#161b27" stroke="#1f2937" strokeWidth={1} />
-
-                        {/* panel label */}
-                        <g id="panel-border">
-                            <text x={472} y={46} fontSize={8} fill="#374151" fontFamily="system-ui,sans-serif" textAnchor="middle" letterSpacing="0.1em">STATE MACHINE // LIVE</text>
-                            {/* live dot */}
-                            <circle cx={548} cy={42} r={3} fill="#10b981" />
-                        </g>
-
-                        {/* ── edges (drawn behind nodes) ── */}
-                        {EDGES.map((e, i) => {
-                            const from = NODES[e.from];
-                            const to = NODES[e.to];
-                            return (
-                                <g key={i}>
-                                    <path
-                                        ref={(el) => { edgeRefs.current[i] = el; }}
-                                        d={edgePath(from, to)}
-                                        fill="none"
-                                        stroke="#374151"
-                                        strokeWidth={1.2}
-                                        strokeLinecap="round"
-                                    />
-                                    {e.label && (
-                                        <text
-                                            x={(from.cx + to.cx) / 2 + 6}
-                                            y={(from.cy + to.cy) / 2}
-                                            fontSize={7}
-                                            fill="#4b5563"
-                                            fontFamily="system-ui,sans-serif"
-                                            textAnchor="middle"
-                                        >
-                                            {e.label}
-                                        </text>
-                                    )}
-                                </g>
-                            );
-                        })}
-
-                        {/* ── nodes ── */}
-                        {NODES.map((n, i) => (
-                            <g key={n.id} ref={(el) => { nodeRefs.current[i] = el; }}>
-                                {/* glow ring */}
-                                <circle cx={n.cx} cy={n.cy} r={26} fill={n.color} fillOpacity={0.08} />
-                                {/* outer ring */}
-                                <circle cx={n.cx} cy={n.cy} r={21} fill="none" stroke={n.color} strokeWidth={0.8} strokeOpacity={0.5} />
-                                {/* body */}
-                                <circle cx={n.cx} cy={n.cy} r={18} fill="#161b27" stroke={n.color} strokeWidth={1.2} />
-                                {/* label */}
-                                <text cx={n.cx} x={n.cx} y={n.cy + 4} fontSize={8} fontWeight={700} fill="#f9fafb"
-                                    fontFamily="system-ui,sans-serif" textAnchor="middle" letterSpacing="0.05em">
-                                    {n.label}
-                                </text>
-                                {/* sublabel below node */}
-                                <text x={n.cx} y={n.cy + 34} fontSize={7} fill="#4b5563"
-                                    fontFamily="system-ui,sans-serif" textAnchor="middle">
-                                    {n.sublabel}
-                                </text>
-                            </g>
-                        ))}
-
+                    {/* Left Block */}
+                    <g className="iso-block" filter="url(#filter1_d_3357_5865)" name="outer-left">
+                        <path fill="#08090A" stroke="#D0D6E0" strokeWidth="0.5" d="M84.534 53.069a7.75 7.75 0 0 1 6.932 0l50.211 25.105a3.75 3.75 0 0 1 2.073 3.353v73.057c0 1.42-.803 2.718-2.073 3.354l-50.211 25.105a7.75 7.75 0 0 1-6.932 0l-50.21-25.105a3.75 3.75 0 0 1-2.074-3.354V81.528a3.75 3.75 0 0 1 2.073-3.354z"></path>
+                        <path stroke="#2E2E32" strokeLinecap="round" strokeWidth="0.5" d="m38 82.056 46.422 23.211a8 8 0 0 0 7.156 0L138 82.056"></path>
                     </g>
+
+                    {/* Left Block Bottom Detail */}
+                    <g className="iso-block" strokeWidth="0.5" filter="url(#filter0_d_3357_5865)">
+                        <path fill="#08090A" stroke="#3E3E44" d="M84.534 139.068a7.76 7.76 0 0 1 6.932 0l50.211 25.106a3.75 3.75 0 0 1 2.073 3.353v19.057c0 1.42-.803 2.718-2.073 3.354l-50.211 25.105a7.75 7.75 0 0 1-6.932 0l-50.21-25.105a3.75 3.75 0 0 1-2.074-3.354v-19.057a3.75 3.75 0 0 1 2.073-3.353z"></path>
+                        <path stroke="#2E2E32" strokeLinecap="round" d="m38 168.056 46.422 23.211a8 8 0 0 0 7.156 0L138 168.056"></path>
+                    </g>
+
+                    {/* Right Block */}
+                    <g className="iso-block" strokeWidth="0.5" filter="url(#filter2_d_3357_5865)">
+                        <path fill="#08090A" stroke="#D0D6E0" d="M212.534 97.069a7.75 7.75 0 0 1 6.932 0l50.211 25.105a3.75 3.75 0 0 1 2.073 3.353v61.057c0 1.42-.803 2.718-2.073 3.354l-50.211 25.105a7.75 7.75 0 0 1-6.932 0l-50.211-25.105a3.75 3.75 0 0 1-2.073-3.354v-61.057a3.75 3.75 0 0 1 2.073-3.353z"></path>
+                        <path stroke="#2E2E32" strokeLinecap="round" d="m166 126.056 46.422 23.211a8 8 0 0 0 7.156 0L266 126.056"></path>
+                    </g>
+
+                    {/* Right Block Top Detail */}
+                    <g className="iso-block" strokeWidth="0.5" filter="url(#filter3_d_3357_5865)" name="outer-right">
+                        <path fill="#08090A" stroke="#3E3E44" d="M212.534 64.069a7.75 7.75 0 0 1 6.932 0l50.211 25.105a3.75 3.75 0 0 1 2.073 3.353v19.057c0 1.42-.803 2.718-2.073 3.354l-50.211 25.105a7.75 7.75 0 0 1-6.932 0l-50.211-25.105a3.75 3.75 0 0 1-2.073-3.354V92.528a3.75 3.75 0 0 1 2.073-3.354z"></path>
+                        <path stroke="#2E2E32" strokeLinecap="round" d="m166 93.056 46.422 23.211a8 8 0 0 0 7.156 0L266 93.056"></path>
+                    </g>
+
+                    {/* Bottom Front Block */}
+                    <g className="iso-block" filter="url(#filter4_d_3357_5865)">
+                        <path fill="#08090A" stroke="#D0D6E0" strokeWidth="0.5" d="M148.534 145.068a7.76 7.76 0 0 1 6.932 0l50.211 25.106a3.75 3.75 0 0 1 2.073 3.353v45.057c0 1.42-.803 2.718-2.073 3.354l-50.211 25.105a7.75 7.75 0 0 1-6.932 0l-50.21-25.105a3.75 3.75 0 0 1-2.074-3.354v-45.057a3.75 3.75 0 0 1 2.073-3.353z"></path>
+                        <path stroke="#2E2E32" strokeLinecap="round" strokeWidth="0.5" d="m102 174.056 46.422 23.211a8 8 0 0 0 7.156 0L202 174.056"></path>
+                    </g>
+
+                    <defs>
+                        <filter id="filter0_d_3357_5865" width="176" height="144" x="0" y="105.056" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
+                            <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+                            <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+                            <feOffset></feOffset>
+                            <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+                            <feComposite in2="hardAlpha" operator="out"></feComposite>
+                            <feColorMatrix values="0 0 0 0 0.0313726 0 0 0 0 0.0352941 0 0 0 0 0.0392157 0 0 0 1 0"></feColorMatrix>
+                            <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3357_5865"></feBlend>
+                            <feBlend in="SourceGraphic" in2="effect1_dropShadow_3357_5865" result="shape"></feBlend>
+                        </filter>
+                        <filter id="filter1_d_3357_5865" width="176" height="198" x="0" y="19.056" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
+                            <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+                            <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+                            <feOffset></feOffset>
+                            <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+                            <feComposite in2="hardAlpha" operator="out"></feComposite>
+                            <feColorMatrix values="0 0 0 0 0.0313726 0 0 0 0 0.0352941 0 0 0 0 0.0392157 0 0 0 1 0"></feColorMatrix>
+                            <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3357_5865"></feBlend>
+                            <feBlend in="SourceGraphic" in2="effect1_dropShadow_3357_5865" result="shape"></feBlend>
+                        </filter>
+                        <filter id="filter2_d_3357_5865" width="176" height="210" x="128" y="39.056" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
+                            <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+                            <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+                            <feOffset></feOffset>
+                            <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+                            <feComposite in2="hardAlpha" operator="out"></feComposite>
+                            <feColorMatrix values="0 0 0 0 0.0313726 0 0 0 0 0.0352941 0 0 0 0 0.0392157 0 0 0 1 0"></feColorMatrix>
+                            <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3357_5865"></feBlend>
+                            <feBlend in="SourceGraphic" in2="effect1_dropShadow_3357_5865" result="shape"></feBlend>
+                        </filter>
+                        <filter id="filter3_d_3357_5865" width="176" height="144" x="128" y="30.056" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
+                            <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+                            <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+                            <feOffset></feOffset>
+                            <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+                            <feComposite in2="hardAlpha" operator="out"></feComposite>
+                            <feColorMatrix values="0 0 0 0 0.0313726 0 0 0 0 0.0352941 0 0 0 0 0.0392157 0 0 0 1 0"></feColorMatrix>
+                            <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3357_5865"></feBlend>
+                            <feBlend in="SourceGraphic" in2="effect1_dropShadow_3357_5865" result="shape"></feBlend>
+                        </filter>
+                        <filter id="filter4_d_3357_5865" width="176" height="170" x="64" y="111.056" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
+                            <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
+                            <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+                            <feOffset></feOffset>
+                            <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+                            <feComposite in2="hardAlpha" operator="out"></feComposite>
+                            <feColorMatrix values="0 0 0 0 0.0313726 0 0 0 0 0.0352941 0 0 0 0 0.0392157 0 0 0 1 0"></feColorMatrix>
+                            <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_3357_5865"></feBlend>
+                            <feBlend in="SourceGraphic" in2="effect1_dropShadow_3357_5865" result="shape"></feBlend>
+                        </filter>
+                    </defs>
                 </svg>
             </div>
 
-            {/* controls */}
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <span style={{ fontSize: 12, color: "#666", minWidth: 110, textAlign: "right" }}>{phaseLabel[phase]}</span>
-                <div style={{ display: "flex", gap: 8 }}>
-                    {(["sketching", "transforming", "polished"] as Phase[]).map((p, i) => {
-                        const order: Phase[] = ["sketching", "transforming", "polished"];
-                        const isActive = phase === p;
-                        const isPast = order.indexOf(phase) > i;
-                        return (
-                            <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: isActive ? "#f9fafb" : isPast ? "#6b7280" : "#333", transition: "background 0.3s" }} />
-                        );
-                    })}
+            {/* Footer / Metrics - Now with 4 columns to fit the new animations */}
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(60px,1fr))] gap-4 border-t border-[#1a1a1c] pt-4">
+                <div>
+                    <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">UPTIME</p>
+                    <p className="m-0 mt-1.5 text-[#e1f5ee] text-[13px] font-medium">99.98%</p>
                 </div>
-                <button onClick={runAnimation} style={{ fontSize: 13, padding: "6px 16px", borderRadius: 99, border: "0.5px solid #333", background: "transparent", cursor: "pointer", color: "#9ca3af" }}>
-                    ↺ replay
-                </button>
+                <div>
+                    <div className="flex items-center gap-2">
+                        <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">LOAD</p>
+                        {/* Integrated Activity Bars */}
+                        <ActivityBars />
+                    </div>
+                    <p className="m-0 mt-1.5 text-[#e1f5ee] text-[13px] font-medium">24.1 TB/s</p>
+                </div>
+                <div>
+                    <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">TEMP</p>
+                    <p className="m-0 mt-1.5 text-[#e1f5ee] text-[13px] font-medium">42°C</p>
+                </div>
+                <div>
+                    <p className="m-0 text-[#666] text-[10px] tracking-wider uppercase">MEM</p>
+                    <div className="mt-1">
+                        {/* Integrated Hex Scrambler */}
+                        <DataScrambler />
+                    </div>
+                </div>
             </div>
         </div>
     );
