@@ -5,16 +5,12 @@ import { Inter } from 'next/font/google';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LenisSmoothScroll from '@/components/SmoothScroll/lenis';
-import { MomentumChart } from '@/components/momentumgraph/momentumgraph';
 import RawCanvas from '@/components/momentumgraph/scrib';
-import StateProcessing from '@/components/momentumgraph/statecom';
-import SystemStateCard from '@/components/momentumgraph/statecom';
-import ComputationDemo from '@/components/momentumgraph/statecom';
-import CinematicIngestion from '@/components/momentumgraph/cine';
 import NodeGroupVisual from '@/components/momentumgraph/statecom';
 import CinematicWireframe from '@/components/momentumgraph/cine';
-import PreservationSlices from '@/components/momentumgraph/perserve';
-import MasterpieceContrast from '@/components/momentumgraph/perserve';
+import InteractiveBiometricScan from '@/components/momentumgraph/perserve';
+import BlurToSharpBiometricScan from '@/components/momentumgraph/perserve';
+import BulletproofScan from '@/components/momentumgraph/perserve';
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -66,7 +62,7 @@ export default function TraceDepthScroll() {
             title: "Perfect Preservation",
             description: "The final editorial asset emerges with sharp focus. The original identity—facial structure, eyes, nose, lips, skin tone, and expression—is preserved exactly, elevated to an ultra-realistic masterpiece.",
             imagePlaceholder: "bg-zinc-950 border-zinc-800",
-            comp: <MasterpieceContrast />
+            comp: <BulletproofScan />
         },
     ];
 
