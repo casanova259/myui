@@ -210,7 +210,7 @@ export default function NodeGroupVisual() {
                 initial={{ opacity: 0 }}
                 animate={isInView ? { opacity: 1 } : {}}
                 transition={{ delay: 0.3 }}
-                className="relative z-30 w-full h-9 border-t border-white/5 flex items-center justify-start px-4  bg-[#08090A]"
+                className="relative z-30 w-full h-9 border-t border-white/5 flex items-center justify-start px-4 gap-1 bg-[#08090A]"
             >
                 <motion.span
                     animate={{ opacity: [1, 0, 1] }}

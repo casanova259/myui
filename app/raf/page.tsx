@@ -12,6 +12,7 @@ import SystemStateCard from '@/components/momentumgraph/statecom';
 import ComputationDemo from '@/components/momentumgraph/statecom';
 import CinematicIngestion from '@/components/momentumgraph/cine';
 import NodeGroupVisual from '@/components/momentumgraph/statecom';
+import CinematicWireframe from '@/components/momentumgraph/cine';
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -53,7 +54,7 @@ export default function TraceDepthScroll() {
             title: "Cinematic Simulation",
             description: "Real-world physics are applied to the wireframe. Trace simulates golden hour sunlight, dramatic cinematic lighting, warm color grading, and a shallow depth of field for absolute realism.",
             imagePlaceholder: "bg-orange-900/50 border-orange-800",
-            comp: <CinematicIngestion />
+            comp: <CinematicWireframe />
         },
         {
             id: 4,
@@ -144,7 +145,7 @@ export default function TraceDepthScroll() {
                         {/* Right Side: Massive Image Placeholder */}
                         <div className={`w-full md:w-1/2 h-48 md:h-full mt-8 md:mt-0 rounded-2xl border-2 border-dashed ${section.imagePlaceholder} flex flex-col items-center p-4 relative overflow-hidden`}>
                             <span className="text-sm font-semibold opacity-40 block mb-2 tracking-wide uppercase select-none">
-                                Ingestion
+                                {section.title}
                             </span>
                             {/* This container now captures the animation size dynamically */}
                             <div className="relative w-full flex-1 flex flex-col justify-between overflow-hidden rounded-xl">

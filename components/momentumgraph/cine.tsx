@@ -1,146 +1,267 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useEffect, useRef } from "react";
 
-export default function CinematicIngestion() {
-    const containerRef = useRef<HTMLDivElement>(null);
+// ── geometry ──────────────────────────────────────────────────────────────────
 
-    // Mouse coordinates tracking relative to the center of the container
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
+function makeBox(s: number) {
+  const h = s / 2;
+  const verts: number[][] = [
+    [-h, -h, -h], [h, -h, -h], [h, h, -h], [-h, h, -h],
+    [-h, -h,  h], [h, -h,  h], [h, h,  h], [-h, h,  h],
+  ];
+  const edges: number[][] = [
+    [0,1],[1,2],[2,3],[3,0],
+    [4,5],[5,6],[6,7],[7,4],
+    [0,4],[1,5],[2,6],[3,7],
+    [0,6],[1,7],[2,4],[3,5],
+  ];
+  const s2 = s * 0.55, h2 = s2 / 2;
+  const verts2: number[][] = [
+    [-h2,-h2,-h2],[h2,-h2,-h2],[h2,h2,-h2],[-h2,h2,-h2],
+    [-h2,-h2, h2],[h2,-h2, h2],[h2,h2, h2],[-h2,h2, h2],
+  ];
+  const offset = verts.length;
+  const edges2 = edges.map(([a, b]) => [a + offset, b + offset]);
+  const connectors = Array.from({ length: 8 }, (_, i) => [i, i + offset]);
+  return {
+    verts: [...verts, ...verts2],
+    edges: [...edges, ...edges2, ...connectors],
+  };
+}
 
-    // Smooth spring physics to prevent jerky movements
-    const springConfig = { damping: 25, stiffness: 120, mass: 0.6 };
-    const smoothX = useSpring(mouseX, springConfig);
-    const smoothY = useSpring(mouseY, springConfig);
+// ── math helpers ──────────────────────────────────────────────────────────────
 
-    // PARALLAX DEPTH MAPPINGS:
-    // Foreground: Moves fast, highly blurred, gives upfront depth
-    const fgX = useTransform(smoothX, [-0.5, 0.5], [-45, 45]);
-    const fgY = useTransform(smoothY, [-0.5, 0.5], [-45, 45]);
+type Vec3 = [number, number, number];
 
-    // Midground (Focal Plane): Sharp, contains the text, moves moderately
-    const mgX = useTransform(smoothX, [-0.5, 0.5], [-15, 15]);
-    const mgY = useTransform(smoothY, [-0.5, 0.5], [-15, 15]);
+const rotX = (v: Vec3, a: number): Vec3 => {
+  const c = Math.cos(a), s = Math.sin(a);
+  return [v[0], v[1] * c - v[2] * s, v[1] * s + v[2] * c];
+};
+const rotY = (v: Vec3, a: number): Vec3 => {
+  const c = Math.cos(a), s = Math.sin(a);
+  return [v[0] * c + v[2] * s, v[1], -v[0] * s + v[2] * c];
+};
+const rotZ = (v: Vec3, a: number): Vec3 => {
+  const c = Math.cos(a), s = Math.sin(a);
+  return [v[0] * c - v[1] * s, v[0] * s + v[1] * c, v[2]];
+};
 
-    // Background: Moves very little, mildly blurred, gives deep perspective
-    const bgX = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
-    const bgY = useTransform(smoothY, [-0.5, 0.5], [-8, 8]);
+function edgeColor(lightDot: number, depth: number, alpha: number): string {
+  const warmth = (lightDot + 1) / 2;
+  const depthFade = (depth + 160) / 320;
+  const r = Math.round(120 + warmth * 135);
+  const g = Math.round(70  + warmth * 70);
+  const b = Math.round(40  + (1 - warmth) * 60);
+  const a = Math.min((0.08 + depthFade * 0.55 + warmth * 0.35) * alpha, 1);
+  return `rgba(${r},${g},${b},${a})`;
+}
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
+function glowWidth(lightDot: number, depth: number): number {
+  const warmth = (lightDot + 1) / 2;
+  const df = (depth + 160) / 320;
+  return 0.5 + warmth * 2.2 + df * 0.8;
+}
 
-        // Normalize coordinates between -0.5 and 0.5
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
+// ── component ─────────────────────────────────────────────────────────────────
 
-        mouseX.set(x);
-        mouseY.set(y);
+export default function CinematicWireframe() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const stateRef = useRef({
+    rotX: 0.42, rotY: 0.28, rotZ: 0.08,
+    velX: 0.0004, velY: 0.0007, velZ: 0.0001,
+    swingX: 0, swingY: 0, swingVX: 0, swingVY: 0,
+    lightAngle: 0,
+    lastT: 0,
+    raf: 0,
+  });
+  const hudRef = useRef<HTMLSpanElement>(null);
+  const geo = useRef(makeBox(110));
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const ctx = canvas.getContext("2d")!;
+    const state = stateRef.current;
+    const { verts, edges } = geo.current;
+
+    const SPRING = 0.018, DAMP = 0.88, LIGHT_SPEED = 0.0006;
+
+    function resize() {
+      canvas.width  = container.clientWidth;
+      canvas.height = container.clientHeight;
+    }
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(container);
+
+    function draw(ts: number) {
+      const dt = Math.min(ts - state.lastT, 32);
+      state.lastT = ts;
+      const W = canvas.width, H = canvas.height;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = "#150600";
+      ctx.fillRect(0, 0, W, H);
+
+      // physics
+      state.velX += (0.0003 - state.velX) * 0.001;
+      state.velY += (0.0008 - state.velY) * 0.001;
+      state.rotX += state.velX * dt * 0.7;
+      state.rotY += state.velY * dt;
+      state.rotZ += state.velZ * dt * 0.3;
+
+      state.swingVX += -SPRING * state.swingX;
+      state.swingVY += -SPRING * state.swingY;
+      state.swingVX *= DAMP; state.swingVY *= DAMP;
+      state.swingX += state.swingVX; state.swingY += state.swingVY;
+
+      // light sweep
+      state.lightAngle += LIGHT_SPEED * dt;
+      const la = state.lightAngle;
+      const _ldx = Math.cos(la) * 0.8, _ldy = -0.4, _ldz = Math.sin(la) * 0.6;
+      const lLen = Math.sqrt(_ldx ** 2 + _ldy ** 2 + _ldz ** 2);
+      const ld: Vec3 = [_ldx / lLen, _ldy / lLen, _ldz / lLen];
+
+      // project verts
+      const cx = W / 2 + state.swingX, cy = H / 2 + state.swingY;
+      const projected = verts.map((v) => {
+        let r = rotX(v as Vec3, state.rotX);
+        r = rotY(r, state.rotY);
+        r = rotZ(r, state.rotZ);
+        const fov = 340, z = r[2] + 340;
+        return [cx + r[0] * fov / z, cy + r[1] * fov / z, r[2]];
+      });
+
+      // depth-sorted edges with light dot
+      const edgesData = edges.map(([a, b]) => {
+        const midZ = (projected[a][2] + projected[b][2]) / 2;
+        const mv = verts[a].map((v, i) => (v + verts[b][i]) / 2) as Vec3;
+        let rm = rotX(mv, state.rotX);
+        rm = rotY(rm, state.rotY);
+        rm = rotZ(rm, state.rotZ);
+        const rLen = Math.sqrt(rm[0]**2+rm[1]**2+rm[2]**2) || 1;
+        const dot = (rm[0]/rLen)*ld[0]+(rm[1]/rLen)*ld[1]+(rm[2]/rLen)*ld[2];
+        return { a, b, midZ, dot };
+      });
+      edgesData.sort((x, y) => x.midZ - y.midZ);
+
+      // draw edges
+      for (const e of edgesData) {
+        const pa = projected[e.a], pb = projected[e.b];
+        const isInner = e.a >= 8;
+        const alpha = isInner ? 0.55 : 1.0;
+        const color = edgeColor(e.dot, e.midZ, alpha);
+        const width = glowWidth(e.dot, e.midZ) * (isInner ? 0.6 : 1);
+
+        ctx.beginPath();
+        ctx.moveTo(pa[0], pa[1]);
+        ctx.lineTo(pb[0], pb[1]);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.lineCap = "round";
+        ctx.stroke();
+
+        if (e.dot > 0.3) {
+          const warmth = (e.dot + 1) / 2;
+          ctx.beginPath();
+          ctx.moveTo(pa[0], pa[1]);
+          ctx.lineTo(pb[0], pb[1]);
+          ctx.strokeStyle = `rgba(240,120,30,${warmth * 0.22 * alpha})`;
+          ctx.lineWidth = width * 3;
+          ctx.stroke();
+        }
+      }
+
+      // vertex dots
+      for (let i = 0; i < 8; i++) {
+        const p = projected[i];
+        const depth = (p[2] + 160) / 320;
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(240,${140 + depth * 60},${60 + depth * 40},${0.4 + depth * 0.5})`;
+        ctx.fill();
+      }
+
+      // bloom
+      const lx = W/2 + ld[0]*180, ly = H/2 + ld[1]*100;
+      const bloom = ctx.createRadialGradient(lx, ly, 0, lx, ly, 90);
+      bloom.addColorStop(0, "rgba(240,130,30,0.07)");
+      bloom.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = bloom;
+      ctx.fillRect(0, 0, W, H);
+
+      // vignette
+      const vig = ctx.createRadialGradient(W/2, H/2, 60, W/2, H/2, W*0.72);
+      vig.addColorStop(0, "rgba(0,0,0,0)");
+      vig.addColorStop(1, "rgba(0,0,0,0.72)");
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, W, H);
+
+      // HUD light meter
+      if (hudRef.current) {
+        const bars = Math.round(((Math.sin(la)+1)/2)*6);
+        hudRef.current.textContent = "LIGHT " + "█".repeat(bars) + "░".repeat(6-bars);
+      }
+
+      state.raf = requestAnimationFrame(draw);
+    }
+
+    state.raf = requestAnimationFrame(draw);
+    return () => {
+      cancelAnimationFrame(state.raf);
+      ro.disconnect();
     };
+  }, []);
 
-    const handleMouseLeave = () => {
-        // Snap back smoothly to dead center when mouse leaves
-        mouseX.set(0);
-        mouseY.set(0);
-    };
+  const hudStyle: React.CSSProperties = {
+    position: "absolute",
+    fontFamily: "'DM Mono', monospace",
+    fontSize: 9,
+    letterSpacing: ".16em",
+    color: "rgba(200,100,40,0.5)",
+    pointerEvents: "none",
+  };
 
-    return (
-        <div
-            ref={containerRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className="relative w-full h-full min-h-[400px] bg-[#311308] rounded-[24px] overflow-hidden flex items-center justify-center select-none border border-orange-950/20 shadow-inner"
-        >
-            {/* ================= LAYER 1: CINEMATIC AMBIENT LIGHT SOURCE ================= */}
-            {/* Animated glowing backdrop replicating golden hour sunset rays */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.15, 1],
-                    opacity: [0.4, 0.6, 0.4]
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,rgba(249,115,22,0.15)_0%,rgba(251,146,60,0.05)_40%,transparent_70%)] pointer-events-none"
-            />
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap');
+        @keyframes scanLine {
+          0%   { top: -2px; opacity: .07; }
+          100% { top: 100%; opacity: .04; }
+        }
+      `}</style>
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          minHeight: 340,
+          background: "#150600",
+          overflow: "hidden",
+          borderRadius: 12,
+        }}
+      >
+        <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
 
-            {/* ================= LAYER 2: BACKGROUND (DEEP BLUR / BOKEH) ================= */}
-            <motion.div
-                style={{ x: bgX, y: bgY }}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none filter blur-[8px] opacity-40"
-            >
-                {/* Floating background geometric particles */}
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-12 left-16 w-16 h-16 border border-orange-400/30 rounded-xl transform rotate-12"
-                />
-                <motion.div
-                    animate={{ y: [0, 15, 0], rotate: -360 }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute bottom-16 right-20 w-24 h-24 border border-amber-500/20 rounded-full"
-                />
-            </motion.div>
+        {/* Scan line */}
+        <div style={{
+          position: "absolute", left: 0, right: 0, height: 2,
+          background: "linear-gradient(90deg,transparent,rgba(220,110,30,.35),transparent)",
+          animation: "scanLine 6s linear infinite",
+          pointerEvents: "none",
+        }} />
 
-            {/* ================= LAYER 3: MIDGROUND (SHARP FOCAL PLANE) ================= */}
-            <motion.div
-                style={{ x: mgX, y: mgY }}
-                className="relative z-10 flex flex-col items-center justify-center pointer-events-none"
-            >
-                {/* Animated Core Geometry (Wireframe + Shards combo) */}
-                <div className="relative w-44 h-44 flex items-center justify-center">
-                    {/* Outer Shifting Wireframe Orb */}
-                    <motion.div
-                        animate={{ rotate: 360, scale: [0.98, 1.02, 0.98] }}
-                        transition={{
-                            rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                            scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-                        }}
-                        className="absolute inset-0 border border-amber-500/40 rounded-full border-dashed"
-                    />
-
-                    {/* Inner Structural Solid Shards */}
-                    <motion.div
-                        animate={{ rotate: -180 }}
-                        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                        className="absolute w-32 h-32 bg-gradient-to-tr from-amber-600/20 to-orange-400/10 border border-orange-500/30 rounded-lg shadow-[0_0_30px_rgba(249,115,22,0.1)] backdrop-blur-[2px]"
-                    />
-
-                    {/* Core Central Display Text */}
-                    <motion.div
-                        initial={{ letterSpacing: "0.1em" }}
-                        whileHover={{ letterSpacing: "0.2em" }}
-                        className="relative z-20 text-white font-mono tracking-[0.15em] font-bold text-sm bg-[#1e0a04]/90 px-5 py-2.5 rounded-md border border-orange-500/40 shadow-2xl backdrop-blur-md"
-                    >
-                        INGESTION
-                    </motion.div>
-                </div>
-            </motion.div>
-
-            {/* ================= LAYER 4: FOREGROUND (HEAVY BOKEH BLUR) ================= */}
-            {/* These elements live right in front of the lens, moving quickly across the frame */}
-            <motion.div
-                style={{ x: fgX, y: fgY }}
-                className="absolute inset-0 pointer-events-none z-20 filter blur-[28px]"
-            >
-                {/* Massive heavily blurred warm mass passing close bottom-left */}
-                <motion.div
-                    animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-br from-orange-600/60 to-transparent rounded-full opacity-70 mix-blend-screen"
-                />
-
-                {/* Passing blurred mass top-right */}
-                <motion.div
-                    animate={{ y: [0, 12, 0] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-bl from-amber-500/40 to-transparent rounded-full opacity-60 mix-blend-screen"
-                />
-            </motion.div>
-        </div>
-    );
+        {/* HUD labels */}
+        <span style={{ ...hudStyle, top: 14, left: 16 }}>WIREFRAME // PHYSICS</span>
+        <span style={{ ...hudStyle, top: 14, right: 16 }}>SIM ACTIVE</span>
+        <span style={{ ...hudStyle, bottom: 14, left: 16 }}>PHASE 03 // ENVIRONMENT</span>
+        <span ref={hudRef} style={{ ...hudStyle, bottom: 14, right: 16 }}>LIGHT ░░░░░░</span>
+      </div>
+    </>
+  );
 }
