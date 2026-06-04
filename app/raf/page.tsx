@@ -32,7 +32,7 @@ export default function TraceDepthScroll() {
             title: "The Raw Canvas",
             description: "Upload your hand-drawn pencil illustrations directly on notebook paper. Trace instantly parses your red and yellow pen annotations, rough doodles, and directional arrows to understand your layout intent.",
             imagePlaceholder: "bg-[#f4f1ea] border-zinc-300",
-            comp:<RawCanvas/>
+            comp: <RawCanvas />
         },
         {
             id: 2,
@@ -43,7 +43,7 @@ export default function TraceDepthScroll() {
             description: "The engine runs the visual input through advanced computational models. Using state machine logic, it maps the underlying geometry to create a mathematically precise vector framework before rendering.",
             imagePlaceholder: "bg-zinc-800 border-zinc-700"
             ,
-            comp:<NodeGroupVisual/>
+            comp: <NodeGroupVisual />
         },
         {
             id: 3,
@@ -53,7 +53,7 @@ export default function TraceDepthScroll() {
             title: "Cinematic Simulation",
             description: "Real-world physics are applied to the wireframe. Trace simulates golden hour sunlight, dramatic cinematic lighting, warm color grading, and a shallow depth of field for absolute realism.",
             imagePlaceholder: "bg-orange-900/50 border-orange-800",
-            comp:<CinematicIngestion/>
+            comp: <CinematicIngestion />
         },
         {
             id: 4,
@@ -63,7 +63,7 @@ export default function TraceDepthScroll() {
             title: "Perfect Preservation",
             description: "The final editorial asset emerges with sharp focus. The original identity—facial structure, eyes, nose, lips, skin tone, and expression—is preserved exactly, elevated to an ultra-realistic masterpiece.",
             imagePlaceholder: "bg-zinc-950 border-zinc-800",
-            comp:<MomentumChart/>
+            comp: <MomentumChart />
         },
     ];
 
@@ -142,11 +142,12 @@ export default function TraceDepthScroll() {
                         </div>
 
                         {/* Right Side: Massive Image Placeholder */}
-                        <div className={`w-full md:w-1/2 h-48 md:h-full mt-8 md:mt-0 rounded-2xl border-2 border-dashed ${section.imagePlaceholder} flex flex-col items-center justify-center relative overflow-hidden`}>
-                            <span className="text-sm font-semibold opacity-40 block mb-2 tracking-wide uppercase">
+                        <div className={`w-full md:w-1/2 h-48 md:h-full mt-8 md:mt-0 rounded-2xl border-2 border-dashed ${section.imagePlaceholder} flex flex-col items-center p-4 relative overflow-hidden`}>
+                            <span className="text-sm font-semibold opacity-40 block mb-2 tracking-wide uppercase select-none">
                                 Ingestion
                             </span>
-                            <div className="text-xs text-center w-full h-auto font-medium">
+                            {/* This container now captures the animation size dynamically */}
+                            <div className="relative w-full flex-1 flex flex-col justify-between overflow-hidden rounded-xl">
                                 {section.comp}
                             </div>
                         </div>
