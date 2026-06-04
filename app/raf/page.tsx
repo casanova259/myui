@@ -10,6 +10,8 @@ import RawCanvas from '@/components/momentumgraph/scrib';
 import StateProcessing from '@/components/momentumgraph/statecom';
 import SystemStateCard from '@/components/momentumgraph/statecom';
 import ComputationDemo from '@/components/momentumgraph/statecom';
+import CinematicIngestion from '@/components/momentumgraph/cine';
+import NodeGroupVisual from '@/components/momentumgraph/statecom';
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -41,7 +43,7 @@ export default function TraceDepthScroll() {
             description: "The engine runs the visual input through advanced computational models. Using state machine logic, it maps the underlying geometry to create a mathematically precise vector framework before rendering.",
             imagePlaceholder: "bg-zinc-800 border-zinc-700"
             ,
-            comp:<SystemStateCard/>
+            comp:<NodeGroupVisual/>
         },
         {
             id: 3,
@@ -50,7 +52,8 @@ export default function TraceDepthScroll() {
             step: "Phase 03 // Environment",
             title: "Cinematic Simulation",
             description: "Real-world physics are applied to the wireframe. Trace simulates golden hour sunlight, dramatic cinematic lighting, warm color grading, and a shallow depth of field for absolute realism.",
-            imagePlaceholder: "bg-orange-900/50 border-orange-800"
+            imagePlaceholder: "bg-orange-900/50 border-orange-800",
+            comp:<CinematicIngestion/>
         },
         {
             id: 4,
