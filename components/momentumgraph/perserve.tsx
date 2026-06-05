@@ -1,64 +1,102 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, useAnimation } from "motion/react";
+import { useState } from "react";
 
-export default function BulletproofScan() {
-  const [isScanning, setIsScanning] = useState(false);
+export default function BlackAndWhiteLiquidGlass() {
+  const [isStabilized, setIsStabilized] = useState(false);
+  const controls = useAnimation();
+
   const imageUrl = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop";
 
-  // Auto-reset the scan after 3 seconds so the user can click it repeatedly
-  useEffect(() => {
-    if (isScanning) {
-      const timer = setTimeout(() => setIsScanning(false), 3000);
-      return () => clearTimeout(timer);
+  const handleInteraction = async () => {
+    if (isStabilized) {
+      setIsStabilized(false);
+      await controls.start({
+        scale: 70, // Return to the liquid warp state
+        transition: { duration: 1.2, ease: "circOut" }
+      });
+    } else {
+      setIsStabilized(true);
+
+      // 1. Quick mechanical jolt
+      await controls.start({
+        scale: 95,
+        transition: { duration: 0.15, ease: "easeInOut" }
+      });
+
+      // 2. Settle down to absolute flat glass clarity (scale 0)
+      await controls.start({
+        scale: 0,
+        transition: { duration: 2.2, ease: [0.16, 1, 0.3, 1] } // Premium cinematic deceleration curve
+      });
     }
-  }, [isScanning]);
+  };
 
   return (
     <div
-      className="relative w-full h-full min-h-[250px] bg-[#0f172a] overflow-hidden rounded-xl cursor-pointer select-none flex flex-col justify-between"
-      onClick={() => setIsScanning(true)}
+      className="relative w-full h-full min-h-[350px] bg-black overflow-hidden font-mono select-none cursor-pointer group rounded-xl border border-white/10"
+      onClick={handleInteraction}
     >
-      {/* 1. THE BASE IMAGE (Starts Blurred & Grayscale) */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <img
-          src={imageUrl}
-          alt="Target"
-          className={`w-full h-full object-cover transition-all duration-700 ${isScanning ? "blur-none grayscale-0 scale-100" : "blur-md grayscale opacity-50 scale-105"
-            }`}
-        />
-        {/* Subtle Tech Overlay Lines */}
-        <div className="absolute inset-0 bg-cyan-500/5 mix-blend-overlay pointer-events-none" />
+      {/* 1. STARK BLACK & WHITE LIQUID IMAGE LAYER */}
+      <div className="absolute inset-0 w-full h-full p-3 bg-black">
+        <div className="w-full h-full rounded-lg overflow-hidden relative bg-neutral-900">
+          <img
+            src={imageUrl}
+            alt="Preserved Asset"
+            className="w-full h-full object-cover select-none pointer-events-none grayscale contrast-[180%] brightness-[95%]"
+            // Links the image to the SVG distortion engine below
+            style={{ filter: "url(#bw-liquid-warp)" }}
+          />
+
+          {/* Stark framing shadow vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none" />
+        </div>
       </div>
 
-      {/* 2. THE SCANNER LINE */}
-      {/* Moving this up and down using pure Y percentages (highly stable) */}
-      <motion.div
-        className="absolute left-0 right-0 h-[3px] bg-cyan-400 z-10 shadow-[0_0_15px_4px_rgba(34,211,238,0.6)] pointer-events-none"
-        initial={{ top: "0%" }}
-        animate={{ top: isScanning ? "100%" : "0%" }}
-        transition={{
-          duration: 2,
-          ease: "easeInOut",
-        }}
-        style={{ opacity: isScanning ? 1 : 0 }}
-      />
+      {/* 2. THE SVG DISTORTION ENGINE */}
+      <svg className="absolute w-0 h-0 invisible">
+        <defs>
+          <filter id="bw-liquid-warp">
+            {/* Generates the fluid, organic glass noise waves */}
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.012"
+              numOctaves="4"
+              result="noise"
+            />
+            {/* Displaces the image pixels. "motion" directly animates the scale attribute */}
+            <motion.feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              initial={{ scale: 70 }} // Starts deeply warped/melted
+              animate={controls}
+            />
+          </filter>
+        </defs>
+      </svg>
 
-      {/* 3. HUD INTERACTION TEXT */}
-      <div className="absolute top-3 left-3 z-20 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded border border-white/10 text-[9px] font-mono tracking-wider text-white/70">
-        {isScanning ? "● SCANNING_COMPILING" : "○ READY_TO_TRACE"}
+      {/* 3. MINIMALIST EDITORIAL HUD */}
+      {/* Top Left Status */}
+      <div className="absolute top-6 left-6 z-20 flex items-center gap-2 text-[9px] tracking-[0.25em] text-white/40 uppercase">
+        <span className={`w-1 h-1 rounded-full ${isStabilized ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" : "bg-white/20 animate-pulse"}`} />
+        <span>{isStabilized ? "State // Crystallized" : "State // Fluid_Matrix"}</span>
       </div>
 
-      <div className="absolute bottom-3 right-3 z-20 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded border border-white/10 text-[9px] font-mono text-cyan-400">
-        {isScanning ? "RESOLVING FOCUS..." : "CLICK TO FOCUS"}
+      {/* Bottom Interface Bar */}
+      <div className="absolute bottom-6 left-6 right-6 z-20 flex justify-between items-center text-[9px] font-mono tracking-widest text-white/30 border-t border-white/5 pt-4">
+        <span className="uppercase opacity-50">
+          {isStabilized ? "Cohesion 100%" : "Cohesion 0% // Unstable"}
+        </span>
+        <span className="font-bold uppercase text-white/50 group-hover:text-white transition-colors duration-300">
+          {isStabilized ? "[ Fracture ]" : "[ Stabilize ]"}
+        </span>
       </div>
 
-      {/* Framing Scope Corners */}
-      <div className="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/30 pointer-events-none" />
-      <div className="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/30 pointer-events-none" />
-      <div className="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white/30 pointer-events-none" />
-      <div className="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/30 pointer-events-none" />
+      {/* Subtle background layout crosshair grids */}
+      <div className="absolute inset-6 border border-white/[0.02] pointer-events-none z-10" />
     </div>
   );
 }

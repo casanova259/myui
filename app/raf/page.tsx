@@ -11,6 +11,9 @@ import CinematicWireframe from '@/components/momentumgraph/cine';
 import InteractiveBiometricScan from '@/components/momentumgraph/perserve';
 import BlurToSharpBiometricScan from '@/components/momentumgraph/perserve';
 import BulletproofScan from '@/components/momentumgraph/perserve';
+import IdentityVault from '@/components/momentumgraph/perserve';
+import LiquidGlassScan from '@/components/momentumgraph/perserve';
+import { MomentumChart } from '@/components/momentumgraph/momentumgraph';
 
 // Initialize Inter font
 const inter = Inter({ subsets: ['latin'] });
@@ -62,7 +65,7 @@ export default function TraceDepthScroll() {
             title: "Perfect Preservation",
             description: "The final editorial asset emerges with sharp focus. The original identity—facial structure, eyes, nose, lips, skin tone, and expression—is preserved exactly, elevated to an ultra-realistic masterpiece.",
             imagePlaceholder: "bg-zinc-950 border-zinc-800",
-            comp: <BulletproofScan />
+            comp: <MomentumChart />
         },
     ];
 
@@ -83,7 +86,11 @@ export default function TraceDepthScroll() {
 
                 tl.to(section, {
                     scale: 12,
-                    opacity: 0,
+                    // 1. Swap 'opacity' for 'autoAlpha'
+                    // autoAlpha automatically toggles visibility: hidden when it hits 0
+                    autoAlpha: 0,
+                    // 2. Strip pointer events immediately as it starts zooming past the camera
+                    pointerEvents: "none",
                     ease: "power1.inOut"
                 }, index);
             });
@@ -143,7 +150,7 @@ export default function TraceDepthScroll() {
                         {/* Right Side: Massive Image Placeholder */}
                         <div className={`w-full md:w-1/2 h-48 md:h-full mt-8 md:mt-0 rounded-2xl border-2 border-dashed ${section.imagePlaceholder} flex flex-col items-center p-4 relative overflow-hidden`}>
                             <span className="text-sm font-semibold opacity-40 block mb-2 tracking-wide uppercase select-none">
-                                {section.title}
+                                {section.step}
                             </span>
                             {/* This container now captures the animation size dynamically */}
                             <div className="relative w-full flex-1 flex flex-col justify-between overflow-hidden rounded-xl">
