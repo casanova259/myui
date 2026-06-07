@@ -2,8 +2,26 @@
 
 import { motion } from "motion/react";
 import { useState } from "react";
+import Image from "next/image";  // ← FIX 2: Next.js optimised image
 
-const CARDS = [
+// FIX 1: type `fit` so TypeScript knows it's a valid ObjectFit value
+interface CardDef {
+    id: string;
+    bg: string;
+    zIndex: number;
+    logo: string;
+    logoHeight: string;
+    logoW: string;
+    amount: string;
+    label: string;
+    fit: React.CSSProperties["objectFit"];   // ← "contain" | "cover" | … not string
+    textColor: string;
+    labelColor: string;
+    stacked: { y: number; rotate: number; x: number };
+    fanned: { y: number; rotate: number; x: number };
+}
+
+const CARDS: CardDef[] = [
     {
         id: "razorpay",
         bg: "#7b6ff0",
@@ -13,7 +31,7 @@ const CARDS = [
         logoW: "48px",
         amount: "$55,000",
         label: "Total Balance",
-        fit:"contain",
+        fit: "contain",
         textColor: "#ffffff",
         labelColor: "rgba(255,255,255,0.6)",
         stacked: { y: 0, rotate: 0, x: 0 },
@@ -26,8 +44,7 @@ const CARDS = [
         logo: "/images.png",
         logoHeight: "36px",
         logoW: "72px",
-        fit:"cover",
-        // bigger since it's a raster PNG
+        fit: "cover",
         amount: "$50,000",
         label: "Total Balance",
         textColor: "#1a1a2e",
@@ -45,30 +62,21 @@ export default function WalletCard() {
 
     return (
         <div className="flex items-center justify-center w-full min-h-screen bg-black">
-            {/*
-        Two-layer approach for border:
-        - Outer ring: ONLY renders the border, overflow visible so cards escape
-        - Inner tile: clips the tray SVG flush, no border
-      */}
             <div
                 className="relative overflow-visible cursor-pointer"
                 style={{
                     width: "320px",
                     height: "320px",
                     borderRadius: "42px",
-                    border: "2px solid #c8c8c8",  // border lives here, nothing covers it
+                    border: "2px solid #c8c8c8",
                 }}
                 onClick={() => setIsOpen((prev) => !prev)}
             >
                 {/* Inner tile — clips tray, carries bg */}
                 <div
                     className="absolute inset-0 overflow-hidden"
-                    style={{
-                        background: "#060606",
-                        borderRadius: "40px",  // 2px inset from outer border
-                    }}
+                    style={{ background: "#060606", borderRadius: "40px" }}
                 >
-                    {/* Tray SVG — safely clipped inside inner tile */}
                     <svg
                         className="absolute left-0 bottom-0 z-3"
                         width="100%"
@@ -80,7 +88,6 @@ export default function WalletCard() {
                         <path fill="#060606" d={TRAY_PATH} />
                     </svg>
 
-                    {/* Wallet total — inside inner tile so it clips correctly */}
                     <p
                         className="absolute m-0 text-white font-semibold tracking-tight"
                         style={{
@@ -116,22 +123,19 @@ export default function WalletCard() {
                             type: "spring",
                             stiffness: 200,
                             damping: 18,
-                            mass: 1.2,   // heavier = slower, more cinematic
+                            mass: 1.2,
                             delay: i * 0.15,
                         }}
                     >
-                        {/* Logo — top right */}
-                        <img
+                        {/* FIX 2: <Image /> instead of <img> */}
+                        <Image
                             src={card.logo}
                             alt={card.id}
+                            fill                         // fills the positioned parent
                             style={{
-                                position: "absolute",
-                                top: "14px",
-                                right: "14px",
-                                height: card.logoHeight,
-                                objectFit: `${card.fit}`,
-                                display: "block",
-                                width: card.logoW
+                                objectFit: card.fit,     // FIX 1: now correctly typed — no template literal needed
+                                objectPosition: "right top",
+                                padding: "14px",         // replaces the old top/right absolute offsets
                             }}
                         />
 
@@ -153,7 +157,7 @@ export default function WalletCard() {
                             <p
                                 style={{
                                     margin: "4px 0 0",
-                                    fontSize: "1 rem",
+                                    fontSize: "1rem",
                                     fontWeight: 500,
                                     color: card.labelColor,
                                     fontFamily: '-apple-system, "SF Pro Display", "Helvetica Neue", sans-serif',
