@@ -8,18 +8,18 @@ function makeBox(s: number) {
   const h = s / 2;
   const verts: number[][] = [
     [-h, -h, -h], [h, -h, -h], [h, h, -h], [-h, h, -h],
-    [-h, -h,  h], [h, -h,  h], [h, h,  h], [-h, h,  h],
+    [-h, -h, h], [h, -h, h], [h, h, h], [-h, h, h],
   ];
   const edges: number[][] = [
-    [0,1],[1,2],[2,3],[3,0],
-    [4,5],[5,6],[6,7],[7,4],
-    [0,4],[1,5],[2,6],[3,7],
-    [0,6],[1,7],[2,4],[3,5],
+    [0, 1], [1, 2], [2, 3], [3, 0],
+    [4, 5], [5, 6], [6, 7], [7, 4],
+    [0, 4], [1, 5], [2, 6], [3, 7],
+    [0, 6], [1, 7], [2, 4], [3, 5],
   ];
   const s2 = s * 0.55, h2 = s2 / 2;
   const verts2: number[][] = [
-    [-h2,-h2,-h2],[h2,-h2,-h2],[h2,h2,-h2],[-h2,h2,-h2],
-    [-h2,-h2, h2],[h2,-h2, h2],[h2,h2, h2],[-h2,h2, h2],
+    [-h2, -h2, -h2], [h2, -h2, -h2], [h2, h2, -h2], [-h2, h2, -h2],
+    [-h2, -h2, h2], [h2, -h2, h2], [h2, h2, h2], [-h2, h2, h2],
   ];
   const offset = verts.length;
   const edges2 = edges.map(([a, b]) => [a + offset, b + offset]);
@@ -51,8 +51,8 @@ function edgeColor(lightDot: number, depth: number, alpha: number): string {
   const warmth = (lightDot + 1) / 2;
   const depthFade = (depth + 160) / 320;
   const r = Math.round(120 + warmth * 135);
-  const g = Math.round(70  + warmth * 70);
-  const b = Math.round(40  + (1 - warmth) * 60);
+  const g = Math.round(70 + warmth * 70);
+  const b = Math.round(40 + (1 - warmth) * 60);
   const a = Math.min((0.08 + depthFade * 0.55 + warmth * 0.35) * alpha, 1);
   return `rgba(${r},${g},${b},${a})`;
 }
@@ -89,8 +89,15 @@ export default function CinematicWireframe() {
 
     const SPRING = 0.018, DAMP = 0.88, LIGHT_SPEED = 0.0006;
 
+
+
     function resize() {
-      canvas.width  = container.clientWidth;
+
+      if (canvas==null||container == null
+      ) return;
+
+      
+      canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
     }
     resize();
@@ -98,6 +105,9 @@ export default function CinematicWireframe() {
     ro.observe(container);
 
     function draw(ts: number) {
+
+      if(canvas==null) return;
+
       const dt = Math.min(ts - state.lastT, 32);
       state.lastT = ts;
       const W = canvas.width, H = canvas.height;
@@ -142,8 +152,8 @@ export default function CinematicWireframe() {
         let rm = rotX(mv, state.rotX);
         rm = rotY(rm, state.rotY);
         rm = rotZ(rm, state.rotZ);
-        const rLen = Math.sqrt(rm[0]**2+rm[1]**2+rm[2]**2) || 1;
-        const dot = (rm[0]/rLen)*ld[0]+(rm[1]/rLen)*ld[1]+(rm[2]/rLen)*ld[2];
+        const rLen = Math.sqrt(rm[0] ** 2 + rm[1] ** 2 + rm[2] ** 2) || 1;
+        const dot = (rm[0] / rLen) * ld[0] + (rm[1] / rLen) * ld[1] + (rm[2] / rLen) * ld[2];
         return { a, b, midZ, dot };
       });
       edgesData.sort((x, y) => x.midZ - y.midZ);
@@ -186,7 +196,7 @@ export default function CinematicWireframe() {
       }
 
       // bloom
-      const lx = W/2 + ld[0]*180, ly = H/2 + ld[1]*100;
+      const lx = W / 2 + ld[0] * 180, ly = H / 2 + ld[1] * 100;
       const bloom = ctx.createRadialGradient(lx, ly, 0, lx, ly, 90);
       bloom.addColorStop(0, "rgba(240,130,30,0.07)");
       bloom.addColorStop(1, "rgba(0,0,0,0)");
@@ -194,7 +204,7 @@ export default function CinematicWireframe() {
       ctx.fillRect(0, 0, W, H);
 
       // vignette
-      const vig = ctx.createRadialGradient(W/2, H/2, 60, W/2, H/2, W*0.72);
+      const vig = ctx.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, W * 0.72);
       vig.addColorStop(0, "rgba(0,0,0,0)");
       vig.addColorStop(1, "rgba(0,0,0,0.72)");
       ctx.fillStyle = vig;
@@ -202,8 +212,8 @@ export default function CinematicWireframe() {
 
       // HUD light meter
       if (hudRef.current) {
-        const bars = Math.round(((Math.sin(la)+1)/2)*6);
-        hudRef.current.textContent = "LIGHT " + "█".repeat(bars) + "░".repeat(6-bars);
+        const bars = Math.round(((Math.sin(la) + 1) / 2) * 6);
+        hudRef.current.textContent = "LIGHT " + "█".repeat(bars) + "░".repeat(6 - bars);
       }
 
       state.raf = requestAnimationFrame(draw);
