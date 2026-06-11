@@ -95,9 +95,9 @@ export const Oviparallax = () => {
 
 
                 <Column images={[images[0], images[1], images[2]]} y={y} />
-                <Column images={[images[3], images[4], images[5]]} y={y2} />
-                <Column images={[images[6], images[7], images[8]]} y={y3} />
-                <Column images={[images[6], images[7], images[8]]} y={y4} />
+                <Column images={[images[8], images[5], images[11]]} y={y2} />
+                <Column images={[images[13],images[6], images[7]]} y={y3} />
+                <Column images={[images[12], images[9], images[8]]} y={y4} />
 
             </div>
 
