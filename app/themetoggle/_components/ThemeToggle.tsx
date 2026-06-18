@@ -2,20 +2,24 @@
 
 import { motion } from "framer-motion";
 
-import { useThemeToggle } from "./_components/useThemeToggle";
-import { AnimationStart } from "./_components/types";
+import { useThemeToggle } from "./useThemeToggle";
+import { AnimationStart, AnimationVariant } from "./types";
 import { cn } from "@/lib/utils";
 
 export const ThemeToggle = ({
     className,
+    variant = "circle",
     start = "center",
     blur = false,
+    gifUrl = "",
 }: {
     className?: string;
+    variant?: AnimationVariant;
     start?: AnimationStart;
     blur?: boolean;
+    gifUrl?: string;
 }) => {
-    const { isDark, toggleTheme } = useThemeToggle({ start, blur });
+    const { isDark, toggleTheme } = useThemeToggle({ variant, start, blur, gifUrl });
 
     return (
         <button
@@ -37,7 +41,7 @@ export const ThemeToggle = ({
                         fill="white"
                     />
                     <path
-                        d="M120 67.5C90.75 67.5 67.5 90.75 67.5 120C67.5 149.25 90.75 172.5 120 172.5"
+                        d="M120 67.5C90.75 67.5 67.5 90.75 67.5 120C67.5 149.25 90.75 67.5 67.5 120C67.5 149.25 90.75 172.5 120 172.5"
                         fill="black"
                     />
                 </motion.g>

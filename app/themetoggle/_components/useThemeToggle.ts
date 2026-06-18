@@ -1,28 +1,36 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { createCircleAnimation } from "./animations";
-import { AnimationStart } from "./types";
+import {
+    createCircleAnimation,
+    createRectangleAnimation,
+    createPolygonAnimation,
+    createGifAnimation,
+} from "./animations";
+import { AnimationVariant, AnimationStart } from "./types";
 
 const STYLE_ID = "theme-transition-styles";
 
 export const useThemeToggle = ({
+    variant = "circle",
     start = "center",
     blur = false,
+    gifUrl = "",
 }: {
+    variant?: AnimationVariant;
     start?: AnimationStart;
     blur?: boolean;
+    gifUrl?: string;
 } = {}) => {
     const { theme, setTheme, resolvedTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    const isDark = mounted && resolvedTheme === "dark";
+    // isDark is simply derived — no separate "mounted" state needed.
+    // resolvedTheme is undefined on the server and on the very first client
+    // render before next-themes' inline script + hydration settle, so we
+    // treat "undefined" as "not dark yet" rather than tracking mount state ourselves.
+    const isDark = resolvedTheme === "dark";
 
     const injectStyles = useCallback((css: string) => {
         let styleEl = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
@@ -35,8 +43,22 @@ export const useThemeToggle = ({
     }, []);
 
     const toggleTheme = useCallback(() => {
-        const { css } = createCircleAnimation(start, blur);
-        injectStyles(css);
+        let animation;
+        switch (variant) {
+            case "rectangle":
+                animation = createRectangleAnimation(start, blur);
+                break;
+            case "polygon":
+                animation = createPolygonAnimation(start, blur);
+                break;
+            case "gif":
+                animation = createGifAnimation(gifUrl);
+                break;
+            default:
+                animation = createCircleAnimation(start, blur);
+        }
+
+        injectStyles(animation.css);
 
         const flipTheme = () => {
             setTheme(theme === "light" ? "dark" : "light");
@@ -48,7 +70,7 @@ export const useThemeToggle = ({
         }
 
         document.startViewTransition(flipTheme);
-    }, [theme, setTheme, start, blur, injectStyles]);
+    }, [theme, setTheme, variant, start, blur, gifUrl, injectStyles]);
 
     return { isDark, toggleTheme };
 };
