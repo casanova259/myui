@@ -48,7 +48,7 @@ export const Options = ({
     return (
         <motion.div
             drag
-            dragMomentum={false}
+            dragMomentum={true}
             className="border-foreground/10 bg-muted2 fixed right-4 top-24 flex w-[245px] flex-col gap-3 rounded-3xl border p-3 backdrop-blur-sm"
         >
             <div className="flex items-center justify-between">

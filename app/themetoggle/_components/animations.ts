@@ -22,7 +22,8 @@ const getClipPosition = (start: AnimationStart) => {
 
 export const createCircleAnimation = (
   start: AnimationStart = "center",
-  blur = false
+  blur = false,
+  duration=0.7
 ): Animation => {
   const pos = getClipPosition(start);
   const name = `circle-${start}${blur ? "-blur" : ""}`;
@@ -31,8 +32,8 @@ export const createCircleAnimation = (
     name,
     css: `
       ::view-transition-group(root) {
-        animation-duration: 2s;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-duration: 1s;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       ::view-transition-new(root) {
@@ -49,9 +50,9 @@ export const createCircleAnimation = (
       @keyframes reveal-${name} {
         from {
           clip-path: circle(0% at ${pos});
-          ${blur ? "filter: blur(8px);" : ""}
+          ${blur ? "filter: blur(4px);" : ""}
         }
-        ${blur ? "50% { filter: blur(4px); }" : ""}
+        ${blur ? "50% { filter: blur(2px); }" : ""}
         to {
           clip-path: circle(150% at ${pos});
           ${blur ? "filter: blur(0px);" : ""}
@@ -103,7 +104,7 @@ export const createRectangleAnimation = (
     css: `
       ::view-transition-group(root) {
         animation-duration: 0.7s;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       ::view-transition-new(root) {
@@ -164,7 +165,7 @@ export const createPolygonAnimation = (
     css: `
       ::view-transition-group(root) {
         animation-duration: 0.7s;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       ::view-transition-new(root) {
@@ -200,7 +201,7 @@ export const createGifAnimation = (gifUrl: string): Animation => {
     name,
     css: `
       ::view-transition-group(root) {
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       ::view-transition-new(root) {
