@@ -1,8 +1,8 @@
 "use client";
-// import { Content } from "@/components/content";
 
+import { Structure } from "./_components/Structure";
 export default function Page() {
   return <main className="min-h-screen flex items-center justify-center bg-black">
-    <h2 className="text-neutral-300">Landing Page Soon.....</h2>
+    <Structure />
   </main>;
 }
