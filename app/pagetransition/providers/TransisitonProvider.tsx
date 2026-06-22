@@ -38,7 +38,7 @@ export default function TransisitonProvider({ children }: { children: React.Reac
             })
                 .to(svgPathRef.current, {
                     drawSVG: "100%",
-                    strokeWidth: 300,
+                    strokeWidth: 280,
                     duration: 0.8,
                     ease: "power2.inOut"
                 }, 0)
