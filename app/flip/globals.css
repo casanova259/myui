@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --base-100: #0f0f0f;
+  --base-200: #1c1c1c;
+  --base-300: #9e9e9e;
+  --base-400: #ffffff;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--base-100);
+  color: var(--base-400);
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Main Desk */
+
+.desk {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.header {
+  position: absolute;
+  width: 400px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  pointer-events: none;
+  z-index: 10;
+}
+
+.header h1 {
+  font-family: "Instrument Serif", serif;
+  font-size: 4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.header p {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--base-300);
+}
+
+/* Floating Items */
+
+.item {
+  position: absolute;
+  will-change: top, left, transform;
+}
+
+/* Modes */
+
+.modes {
+  position: fixed;
+  bottom: 7.5svh;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modes button {
+  width: 3rem;
+  height: 3rem;
+
+  font-size: 1.25rem;
+  color: var(--base-300);
+
+  background: var(--base-100);
+  border: 1px solid var(--base-200);
+  border-radius: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+.modes button:active {
+  transform: scale(0.9);
+}
+
+.modes button.active {
+  background: var(--base-200);
+  border: 1px solid var(--base-200);
+}
+
+/* Responsive */
+
+@media (max-width: 1400px) {
+  .desk {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 1000px) {
+  .desk::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: rgba(245, 242, 237, 0.5);
+  }
+
+  .item {
+    filter: saturate(0);
+  }
+}
