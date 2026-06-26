@@ -134,3 +134,46 @@ p {
     width: 100%;
   }
 }
+
+.projects {
+  position: relative;
+  width: 100%;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.projects-row {
+  width: 125%;
+  display: flex;
+  gap: 1rem;
+}
+
+.project {
+  flex: 1;
+  aspect-ratio: 7/5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.project-img {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative; /* add this */
+}
+
+.project-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+}
+
+.project-info p {
+  font-size: 0.75rem;
+  color: var(--base-300);
+}

@@ -1,0 +1,18 @@
+export const PROJECTS = [
+    { name: "Lap One", year: 2018, img: "/f1Scroll/1.jpg" },
+    { name: "Pole Position", year: 2019, img: "/f1Scroll/2.jpg" },
+    { name: "Pit Wall", year: 2020, img: "/f1Scroll/3.jpg" },
+    { name: "Apex", year: 2021, img: "/f1Scroll/4.jpg" },
+    { name: "Overcut", year: 2019, img: "/f1Scroll/5.jpg" },
+    { name: "DRS Zone", year: 2022, img: "/f1Scroll/6.jpg" },
+    { name: "Podium", year: 2020, img: "/f1Scroll/7.jpg" },
+    { name: "Sector Three", year: 2021, img: "/f1Scroll/8.jpg" },
+    { name: "Flat Out", year: 2018, img: "/f1Scroll/9.jpg" },
+    { name: "Cold Tyres", year: 2023, img: "/f1Scroll/10.jpg" },
+    { name: "Safety Car", year: 2022, img: "/f1Scroll/11.jpg" },
+    { name: "Formation Lap", year: 2024, img: "/f1Scroll/12.jpg" },
+    { name: "Checkered", year: 2019, img: "/f1Scroll/13.jpg" },
+    { name: "Box Box Box", year: 2023, img: "/f1Scroll/14.jpg" },
+    { name: "Silver Arrow", year: 2025, img: "/f1Scroll/15.png" },
+    { name: "Final Lap", year: 2024, img: "/f1Scroll/16.jpg" },
+]

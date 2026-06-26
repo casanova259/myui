@@ -1,7 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  transpilePackages: ["gsap"],
-};
-
-export default nextConfig;
+const nextConfig = {
+  images: {
+    formats: ['image/webp'],
+  },
+}
+export default nextConfig

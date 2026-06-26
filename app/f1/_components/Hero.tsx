@@ -110,13 +110,13 @@ export default function Hero() {
 
         heroScrollTimeline.to(
             '.hero-outro-left',
-            { xPercent: -50, duration: 0.3 },
+            { xPercent: -100, duration: 0.3 },
             0.7,
         )
 
         heroScrollTimeline.to(
             '.hero-outro-right',
-            { xPercent: 50, duration: 0.3 },
+            { xPercent: 100, duration: 0.3 },
             0.7,
         )
 
