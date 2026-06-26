@@ -13,6 +13,10 @@ body {
   font-family: var(--font-inter), sans-serif;
   background-color: var(--base-100);
 }
+html,
+body {
+  overflow-x: hidden;
+}
 
 h1,
 h3 {

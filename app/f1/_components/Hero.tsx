@@ -129,7 +129,7 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-                <img src="/f1Scroll/5.jpg" alt="" />
+                <img src="/f1Scroll/16.jpg" alt="" />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>
