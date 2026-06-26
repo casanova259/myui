@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 export default function PerformanceWidget() {
-    const barsRef = useRef([]);
+    const barsRef = useRef<HTMLDivElement[]>([]);
 
     useEffect(() => {
         // GSAP animation to make the segmented bars fill up on load
@@ -76,7 +76,7 @@ export default function PerformanceWidget() {
                 {[...Array(30)].map((_, i) => (
                     <div
                         key={i}
-                        ref={el => barsRef.current[i] = el}
+                        ref={el => { barsRef.current[i] = el as HTMLDivElement }}
                         // 28 segments filled (represents ~95%), 2 empty
                         className={`flex-1 rounded-sm h-full ${i < 28 ? 'bg-[#e0e0e0]' : 'bg-[#262626]'
                             }`}
