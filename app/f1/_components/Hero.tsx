@@ -63,7 +63,7 @@ export default function Hero() {
         heroScrollTimeline.to(
             heroRevealer,
             {
-                clipPath: ' polygon(50% 0, 50% 0, 50% 100%, 50% 100%',
+                clipPath: 'polygon(0% 49.5%, 100% 49.5%, 100% 50.5%, 0% 50.5%)',
                 duration: 0.2,
             },
             0,
