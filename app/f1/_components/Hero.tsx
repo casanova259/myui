@@ -110,7 +110,7 @@ export default function Hero() {
 
         heroScrollTimeline.to(
             '.hero-outro-left',
-            { xPercent: -100, duration: 0.3 },
+            { xPercent: -100, duration: 0.1 },
             0.7,
         )
 
@@ -129,10 +129,11 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-                <img src="/f1Scroll/16.jpg" alt="" />
+                <img src="/f1Scroll/12.jpg" alt="" />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>
+                <span className="hero-bg-text">AMG</span>
                 <h1>Speed. Precision. Dominance.</h1>
             </div>
 
@@ -145,7 +146,13 @@ export default function Hero() {
             </div>
 
             <div className="hero-outro-content" ref={heroOutroRef}>
-                <h1>Built for those who refuse to finish anywhere but first</h1>
+                <div className="outro-box">
+                    {/* <div className="outro-bracket top-right" />
+                    <div className="outro-bracket bottom-right" />
+                    <div className="outro-bracket bottom-left" />
+                    <div className="outro-bracket top-left" /> */}
+                    <h1>Built for those who refuse to finish anywhere but first</h1>
+                </div>
             </div>
         </section>
     )
