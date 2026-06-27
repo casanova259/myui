@@ -52,7 +52,7 @@ export default function Hero() {
                 start: 'top top',
                 end: () => `+=${window.innerHeight * 7}`,
                 pin: true,
-                pinSpacing: false,
+                pinSpacing: true,
                 scrub: true,
                 invalidateOnRefresh: true,
             },
@@ -110,7 +110,7 @@ export default function Hero() {
 
         heroScrollTimeline.to(
             '.hero-outro-left',
-            { xPercent: -100, duration: 0.1 },
+            { xPercent: -100, duration: 0.3 },
             0.7,
         )
 
@@ -154,6 +154,10 @@ export default function Hero() {
                     <h1>Built for those who refuse to finish anywhere but first</h1>
                 </div>
             </div>
+
+            <section className="bg- min-h-screen w-full font-neue">
+                THIS  IS IS
+            </section>
         </section>
     )
 }

@@ -45,7 +45,9 @@ h3 {
 p {
   font-size: 1.1rem;
 }
-
+.font-neue {
+  font-family: var(--font-neue-haas);
+}
 .hero-bg-text {
   position: absolute;
   font-family: var(--font-bebas);
@@ -180,35 +182,6 @@ p {
 .hero-img {
   clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
   will-change: clip-path;
-}
-
-.about {
-  position: relative;
-  width: 100%;
-  height: 100svh;
-  padding: 2rem;
-  background-color: var(--base-100);
-  color: var(--base-300);
-  margin-top: 500svh;
-  z-index: 1;
-}
-
-.about-content {
-  width: 40%;
-  height: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-align: center;
-}
-
-@media (max-width: 1000px) {
-  .hero-content h1,
-  .hero-outro-content h1,
-  .about-content {
-    width: 100%;
-  }
 }
 
 .projects {
