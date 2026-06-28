@@ -63,7 +63,7 @@ export default function Hero() {
         heroScrollTimeline.to(
             heroRevealer,
             {
-                clipPath: ' polygon(50% 0, 50% 0, 50% 100%, 50% 100%',
+                clipPath: ' polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
                 duration: 0.2,
             },
             0,
@@ -126,7 +126,7 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-                <img src="/f1Scroll/5.jpg" alt="" />
+                <img src="/f1Scroll/12.jpg" alt="" />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>
