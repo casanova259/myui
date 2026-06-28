@@ -52,7 +52,7 @@ export default function Hero() {
                 start: 'top top',
                 end: () => `+=${window.innerHeight * 7}`,
                 pin: true,
-                pinSpacing: true,
+                pinSpacing: false,
                 scrub: true,
                 invalidateOnRefresh: true,
             },
@@ -63,7 +63,7 @@ export default function Hero() {
         heroScrollTimeline.to(
             heroRevealer,
             {
-                clipPath: 'polygon(0% 49.5%, 100% 49.5%, 100% 50.5%, 0% 50.5%)',
+                clipPath: ' polygon(50% 0, 50% 0, 50% 100%, 50% 100%',
                 duration: 0.2,
             },
             0,
@@ -109,14 +109,11 @@ export default function Hero() {
         heroScrollTimeline.set(heroSection, { backgroundColor: 'transparent' }, 0.7)
 
         heroScrollTimeline.to(
-            '.hero-outro-left',
-            { xPercent: -100, duration: 0.3 },
-            0.7,
-        )
-
-        heroScrollTimeline.to(
-            '.hero-outro-right',
-            { xPercent: 100, duration: 0.3 },
+            ['.hero-outro-left', '.hero-outro-right'],
+            {
+                x: (i) => i === 0 ? '-100vw' : '100vw',
+                duration: 0.3,
+            },
             0.7,
         )
 
@@ -129,11 +126,10 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-                <img src="/f1Scroll/12.jpg" alt="" />
+                <img src="/f1Scroll/5.jpg" alt="" />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>
-                <span className="hero-bg-text">AMG</span>
                 <h1>Speed. Precision. Dominance.</h1>
             </div>
 
@@ -146,18 +142,8 @@ export default function Hero() {
             </div>
 
             <div className="hero-outro-content" ref={heroOutroRef}>
-                <div className="outro-box">
-                    {/* <div className="outro-bracket top-right" />
-                    <div className="outro-bracket bottom-right" />
-                    <div className="outro-bracket bottom-left" />
-                    <div className="outro-bracket top-left" /> */}
-                    <h1>Built for those who refuse to finish anywhere but first</h1>
-                </div>
+                <h1>Built for those who refuse to finish anywhere but first</h1>
             </div>
-
-            <section className="bg- min-h-screen w-full font-neue">
-                THIS  IS IS
-            </section>
         </section>
     )
 }
