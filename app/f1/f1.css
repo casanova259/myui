@@ -115,6 +115,7 @@ p {
   color: var(--base-300);
   margin-top: 500svh;
   z-index: 1;
+  padding-bottom: 3rem;
 }
 
 

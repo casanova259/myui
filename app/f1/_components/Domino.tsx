@@ -117,8 +117,9 @@ export default function Projects() {
                                     src={project.img}
                                     alt={project.name}
                                     fill
-                                    sizes="(max-width: 1000px) 30vw, 15vw"
-                                    quality={75}
+                                    quality={85}
+                                    priority={rowIndex === 0}
+                                    className="object-cover"
                                 />
                             </div>
                             <div className="project-info">
