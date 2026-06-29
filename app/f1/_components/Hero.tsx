@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
+import Image from 'next/image';
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -126,7 +127,7 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-                <img src="/f1Scroll/12.jpg" alt="" />
+               <Image src="/f1Scroll/12.jpg" alt="" fill sizes="100vw" priority />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>

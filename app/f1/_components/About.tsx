@@ -11,7 +11,7 @@ export default function About() {
                     <div className="absolute bg-[#dedddd] w-[1020px] h-[520px]"/>
 
                 </div>
-                <p className="font-neue">From the pit lane to the podium, every detail engineered with purpose and relentless precision</p>
+                <p className="font-bebasNeue">From the pit lane to the podium, every detail engineered with purpose and relentless precision</p>
             </div>
 
         </section>
