@@ -40,9 +40,11 @@ export default function Hero() {
 
         gsap.set('.hero-outro-left', {
             clipPath: 'polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)',
+            x:0
         })
         gsap.set('.hero-outro-right', {
             clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)',
+            x:0
         })
 
         gsap.set(heroImagesWrapper, { scale: 1 })
@@ -110,11 +112,13 @@ export default function Hero() {
         heroScrollTimeline.set(heroSection, { backgroundColor: 'transparent' }, 0.7)
 
         heroScrollTimeline.to(
-            ['.hero-outro-left', '.hero-outro-right'],
-            {
-                x: (i) => i === 0 ? '-100vw' : '100vw',
-                duration: 0.3,
-            },
+            '.hero-outro-left',
+            { xPercent: -100, duration: 0.3 },
+            0.7,
+        )
+        heroScrollTimeline.to(
+            '.hero-outro-right',
+            { xPercent: 100, duration: 0.3 },
             0.7,
         )
 
@@ -127,7 +131,7 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-               <Image src="/f1Scroll/12.jpg" alt="" fill sizes="100vw" priority />
+                <Image src="/f1Scroll/12.jpg" alt="" fill sizes="100vw" quality={85} priority className="object-cover" />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>

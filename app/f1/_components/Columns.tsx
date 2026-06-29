@@ -1,4 +1,5 @@
 import { motion, MotionValue } from "motion/react"
+import Image from "next/image";
 
 type ColumnProps = {
     images: string[];
@@ -12,11 +13,14 @@ export const Column = ({ images, y }: ColumnProps) => {
             style={{ y }}
         >
             {images.map((src, i) => (
-                <div key={i} className="relative h-full w-full overflow-hidden">
-                    <img
-                        src={`${src}`}
+                <div key={i} className="relative w-full overflow-hidden aspect-[3/4]">
+                    <Image
+                        src={src}
                         alt="image"
-                        className="pointer-events-none object-cover w-full h-full"
+                        fill
+                        className="pointer-events-none object-cover"
+                        sizes="100vw"
+                        quality={85}
                     />
                 </div>
             ))}
