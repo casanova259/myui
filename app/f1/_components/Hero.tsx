@@ -67,7 +67,7 @@ export default function Hero() {
             heroRevealer,
             {
                 clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
-                duration: 0.2,
+                duration: 0.3,
             },
             0,
         )
@@ -131,7 +131,7 @@ export default function Hero() {
     return (
         <section className="hero" ref={heroRef}>
             <div className="hero-bg" ref={heroBgRef}>
-                <Image src="/f1Scroll/12.jpg" alt="" fill sizes="100vw" quality={85} priority className="object-cover" />
+                <Image src="/f1Scroll-optimized/12.jpg" alt="" fill sizes="100vw" quality={85} priority className="object-cover" />
             </div>
 
             <div className="hero-content" ref={heroContentRef}>
@@ -141,9 +141,9 @@ export default function Hero() {
             <div className="hero-revealer" ref={heroRevealerRef}></div>
 
             <div className="hero-images" ref={heroImagesWrapperRef}>
-                <div className="hero-img"><img src="/f1Scroll/6.jpg" alt="" /></div>
-                <div className="hero-img"><img src="/f1Scroll/3.jpg" alt="" /></div>
-                <div className="hero-img"><img src="/f1Scroll/4.jpg" alt="" /></div>
+                <div className="hero-img"><img src="/f1Scroll-optimized/6.jpg" alt="" /></div>
+                <div className="hero-img"><img src="/f1Scroll-optimized/3.jpg" alt="" /></div>
+                <div className="hero-img"><img src="/f1Scroll-optimized/4.jpg" alt="" /></div>
             </div>
 
             <div className="hero-outro-content" ref={heroOutroRef}>

@@ -7,7 +7,7 @@ export default function About() {
                 <h3 className="pt-4">Mercedes-AMG F1 — A legacy forged at 300km/h</h3>
 
                 <div className="w-[1000px] h-[500px]  flex items-center justify-center">
-                    <img src='/f1Scroll/14.jpg' className="z-10 grayscale-100" />
+                    <img src='/f1Scroll-optimized/14.jpg' className="z-10 grayscale-100" />
                     <div className="absolute bg-[#dedddd] w-[1020px] h-[520px]"/>
 
                 </div>

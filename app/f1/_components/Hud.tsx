@@ -108,7 +108,7 @@ export default function HUD() {
                     {/* Image */}
                     <div className="hud-img-wrap">
                         <Image
-                            src="/f1Scroll/4.jpg"
+                            src="/f1Scroll-optimized/4.jpg"
                             alt="Mercedes W15"
                             fill
                             quality={80}

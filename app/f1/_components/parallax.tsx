@@ -6,20 +6,20 @@ import { useEffect, useRef, useState } from "react";
 import { Column } from "./Columns";
 
 const images = [
-    "/f1Scroll/12.jpg",
-    "/f1Scroll/14.jpg",
-    "/f1Scroll/3.jpg",
-    "/f1Scroll/4.jpg",
-    "/f1Scroll/5.jpg",
-    "/f1Scroll/6.jpg",
-    "/f1Scroll/7.jpg",
-    "/f1Scroll/8.jpg",
-    "/f1Scroll/9.jpg",
-    "/f1Scroll/10.jpg",
-    "/f1Scroll/11.jpg",
-    "/f1Scroll/12.jpg",
-    "/f1Scroll/13.jpg",
-    "/f1Scroll/14.jpg",
+    "/f1Scroll-optimized/12.jpg",
+    "/f1Scroll-optimized/14.jpg",
+    "/f1Scroll-optimized/3.jpg",
+    "/f1Scroll-optimized/4.jpg",
+    "/f1Scroll-optimized/5.jpg",
+    "/f1Scroll-optimized/6.jpg",
+    "/f1Scroll-optimized/7.jpg",
+    "/f1Scroll-optimized/8.jpg",
+    "/f1Scroll-optimized/9.jpg",
+    "/f1Scroll-optimized/10.jpg",
+    "/f1Scroll-optimized/11.jpg",
+    "/f1Scroll-optimized/12.jpg",
+    "/f1Scroll-optimized/13.jpg",
+    "/f1Scroll-optimized/14.jpg",
 ];
 
 export const Oviparallax = () => {
