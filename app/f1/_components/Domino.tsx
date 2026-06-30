@@ -38,37 +38,12 @@ export default function Projects() {
 
         section.style.height = `${expandedSectionHeight}px`
 
-        // Reused on every frame so we don't allocate a new array each time
-        const rowRects: DOMRect[] = new Array(rows.length)
-
         function onScrollUpdate() {
             const scrollY = window.scrollY
             const VwHeight = window.innerHeight
 
-            // --- Cheap bail-out: skip everything if the section is nowhere
-            // near the viewport. This is the only read we do up front, and
-            // it avoids doing 10 rows' worth of work while the user is
-            // scrolling through Hero/About instead.
-            const sectionRect = section!.getBoundingClientRect()
-            if (sectionRect.bottom < -VwHeight || sectionRect.top > VwHeight * 2) {
-                return
-            }
-
-            // --- PASS 1: ALL READS ---
-            // Measure every row first, before changing anything. This way
-            // the browser answers all of them using the layout it already
-            // has cached, instead of recalculating layout between each read.
-            for (let i = 0; i < rows.length; i++) {
-                rowRects[i] = rows[i].getBoundingClientRect()
-            }
-
-            // --- PASS 2: ALL WRITES ---
-            // Now that we have every measurement we need, apply all the
-            // style changes. No reads are interleaved here, so this doesn't
-            // force any extra layout recalculation.
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i]
-                const rect = rowRects[i]
+            rows.forEach((row) => {
+                const rect = row.getBoundingClientRect()
                 const rowTop = rect.top + scrollY
                 const rowBottom = rowTop + rect.height
 
@@ -83,7 +58,7 @@ export default function Projects() {
                     (rowEndWidth.current - rowStartWidth.current) * prog
 
                 row.style.width = `${width}%`
-            }
+            })
         }
 
         gsap.ticker.add(onScrollUpdate)
@@ -144,7 +119,6 @@ export default function Projects() {
                                     fill
                                     quality={85}
                                     priority={rowIndex === 0}
-                                    sizes="80vw"
                                     className="object-cover"
                                 />
                             </div>
