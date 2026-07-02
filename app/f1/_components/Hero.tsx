@@ -63,16 +63,22 @@ export default function Hero() {
 
         heroScrollTimeline.to(heroBackground, { scale: 1, duration: 0.5 }, 0)
 
-        // Revealer starts as a thin HORIZONTAL line in the middle of the
-        // screen (set in CSS) and expands straight up and down into a full
-        // rectangle — a single tween, so there's no rotation step in between.
+        heroScrollTimeline.to(
+            heroRevealer,
+            {
+                clipPath: 'polygon(50% 0, 50% 0, 50% 100%, 50% 100%)',
+                duration: 0.2,
+            },
+            0,
+        )
+
         heroScrollTimeline.to(
             heroRevealer,
             {
                 clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-                duration: 0.5,
+                duration: 0.3,
             },
-            0,
+            0.2,
         )
 
         const cascadeStart = 0.4
