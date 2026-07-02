@@ -1,0 +1,237 @@
+@import url("https://fonts.cdnfonts.com/css/pp-neue-montreal");
+
+/* ---------------------------------------------------------------- */
+/* Scope wrapper — theme vars + resets live here instead of :root/*  */
+/* so nothing leaks onto the rest of the site. Plain CSS is global,  */
+/* so every selector below is nested under .hero-animation-wrapper.  */
+/* ---------------------------------------------------------------- */
+.hero-animation-wrapper {
+  --base-100: #dcdbd5;
+  --base-200: #e12c1a;
+  --base-300: #1a0401;
+}
+
+.hero-animation-wrapper * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hero-animation-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-animation-wrapper h1,
+.hero-animation-wrapper h3 {
+  text-transform: uppercase;
+  font-family: "PP Neue Montreal", sans-serif;
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -3%;
+}
+
+.hero-animation-wrapper h1 {
+  font-size: clamp(2rem, 8vw, 14rem);
+}
+
+.hero-animation-wrapper h3 {
+  font-size: clamp(2rem, 5vw, 8rem);
+}
+
+.hero-animation-wrapper p {
+  text-transform: uppercase;
+  font-family: "PP Neue Montreal", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* ---------------------------------------------------------------- */
+/* Sections                                                          */
+/* ---------------------------------------------------------------- */
+.hero-animation-wrapper .hero,
+.hero-animation-wrapper .about {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.hero-animation-wrapper .about {
+  background-color: var(--base-300);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-animation-wrapper .about h3 {
+  text-align: center;
+  color: var(--base-100);
+  width: 60%;
+}
+
+/* ---------------------------------------------------------------- */
+/* Hero — foreground + background shared positioning                 */
+/* ---------------------------------------------------------------- */
+.hero-animation-wrapper .hero-fg-content,
+.hero-animation-wrapper .hero-bg-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+}
+
+.hero-animation-wrapper .hero-fg-content {
+  background-color: var(--base-300);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  will-change: clip-path, transform;
+  z-index: 2;
+}
+
+.hero-animation-wrapper .hero-fg-img {
+  /* ASSUMPTION: no screenshot captured this rule — sizing to fill
+     the fg layer. Adjust if your original differs. */
+  width: 100%;
+  height: 100%;
+}
+
+.hero-animation-wrapper .hero-fg-header {
+  /* ASSUMPTION: position/top/bottom weren't visible in the
+     screenshots — only the tail end of this rule was captured
+     (transform, width, padding, color, text-align). Placed at the
+     bottom of the hero by default; adjust top/bottom to match your
+     original. */
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  padding: 2rem;
+  color: var(--base-100);
+  text-align: center;
+  z-index: 3;
+}
+
+.hero-animation-wrapper .hero-fg-overlay-dark,
+.hero-animation-wrapper .hero-fg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.hero-animation-wrapper .hero-fg-overlay-dark {
+  background-color: var(--base-300);
+  z-index: 4;
+}
+
+.hero-animation-wrapper .hero-fg-overlay {
+  background-color: var(--base-200);
+  z-index: 4;
+}
+
+/* ---------------------------------------------------------------- */
+/* Hero — background content (revealed columns)                      */
+/* ---------------------------------------------------------------- */
+.hero-animation-wrapper .hero-bg-content {
+  display: flex;
+  background-color: var(--base-100);
+  z-index: 0;
+}
+
+.hero-animation-wrapper .hero-bg-content-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+}
+
+.hero-animation-wrapper .hero-bg-content-col:nth-child(2) {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-animation-wrapper .hero-bg-content-copy {
+  /* ASSUMPTION: default (desktop) width wasn't captured — only the
+     max-width:1000px override (width:100%) was visible, implying
+     this is narrower by default. Adjust as needed. */
+  width: 50%;
+}
+
+.hero-animation-wrapper .hero-bg-content-copy p {
+  color: var(--base-300);
+}
+
+/* ---------------------------------------------------------------- */
+/* Hero — outro content (two images + closing line)                  */
+/* ---------------------------------------------------------------- */
+.hero-animation-wrapper .hero-outro-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 1;
+}
+
+.hero-animation-wrapper .hero-outro-img {
+  flex: 1;
+  height: 100%;
+  will-change: clip-path;
+}
+
+.hero-animation-wrapper .hero-outro-img:nth-child(1) {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+}
+
+.hero-animation-wrapper .hero-outro-img:nth-child(2) {
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+}
+
+.hero-animation-wrapper .hero-outro-header {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--base-100);
+  text-align: center;
+  width: 60%;
+  z-index: 2;
+}
+
+.hero-animation-wrapper .hero-outro-line {
+  position: relative;
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------------- */
+/* Responsive                                                        */
+/* ---------------------------------------------------------------- */
+@media (max-width: 1000px) {
+  .hero-animation-wrapper .hero-bg-content-copy {
+    width: 100%;
+  }
+
+  .hero-animation-wrapper .hero-bg-content-col:nth-child(1) .hero-bg-content-copy {
+    margin-top: -50svh;
+  }
+
+  .hero-animation-wrapper .hero-bg-content-col:nth-child(2) .hero-bg-content-copy {
+    margin-top: 50svh;
+  }
+
+  .hero-animation-wrapper .about h3,
+  .hero-animation-wrapper .hero-outro-header {
+    width: 100%;
+    padding: 2rem;
+  }
+}
