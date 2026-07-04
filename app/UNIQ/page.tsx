@@ -57,8 +57,14 @@ export default function HeroAnimation() {
       // ASSUMPTION: exact SplitText config wasn't visible in the
       // screenshots — only `.lines` usage further down. "lines" type
       // + initial y:"100%" (hidden below) matches how it's animated in.
+      // `mask: "lines"` wraps each line in its own overflow-hidden
+      // container so the translated (hidden) line is actually clipped
+      // instead of just sitting visible, shifted down — without this,
+      // the text bleeds through and overlaps the Motion/Silence copy
+      // underneath before the outro phase even starts.
       const outroHeaderSplit = SplitText.create(outroHeader, {
         type: "lines",
+        mask: "lines",
       });
       gsap.set(outroHeaderSplit.lines, { y: "100%" });
 

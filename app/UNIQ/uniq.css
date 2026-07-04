@@ -93,18 +93,12 @@
 }
 
 .hero-animation-wrapper .hero-fg-img {
-  /* ASSUMPTION: no screenshot captured this rule — sizing to fill
-     the fg layer. Adjust if your original differs. */
+  position: absolute;
   width: 100%;
   height: 100%;
 }
 
 .hero-animation-wrapper .hero-fg-header {
-  /* ASSUMPTION: position/top/bottom weren't visible in the
-     screenshots — only the tail end of this rule was captured
-     (transform, width, padding, color, text-align). Placed at the
-     bottom of the hero by default; adjust top/bottom to match your
-     original. */
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -160,10 +154,15 @@
 }
 
 .hero-animation-wrapper .hero-bg-content-copy {
-  /* ASSUMPTION: default (desktop) width wasn't captured — only the
-     max-width:1000px override (width:100%) was visible, implying
-     this is narrower by default. Adjust as needed. */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   width: 50%;
+  will-change: transform;
+}
+
+.hero-animation-wrapper .hero-bg-content-copy h3 {
+  color: var(--base-200);
 }
 
 .hero-animation-wrapper .hero-bg-content-copy p {
