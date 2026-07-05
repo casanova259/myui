@@ -186,7 +186,7 @@ export default function HeroAnimation() {
           </div>
 
           <div className="hero-fg-header">
-            <h1>Silhouettes against the burning dark</h1>
+            <h1>You Have To Go Down To Go High</h1>
           </div>
 
           <div className="hero-fg-overlay-dark" ref={fgOverlayDarkRef} />
