@@ -182,7 +182,7 @@ export default function HeroAnimation() {
         {/* Foreground layer (clipped, sits above bg) */}
         <div className="hero-fg-content" ref={fgContentRef}>
           <div className="hero-fg-img">
-            <img src="/images2/img1.jpg" alt="" />
+            <img src="/uniq/img1.jpg" alt="" />
           </div>
 
           <div className="hero-fg-header">
@@ -221,10 +221,10 @@ export default function HeroAnimation() {
         {/* Outro layer (two images clip-path split top/bottom) */}
         <div className="hero-outro-content">
           <div className="hero-outro-img" ref={outroImgTopRef}>
-            <img src="/images2/img2.jpg" alt="" />
+            <img src="/uniq/img2.jpg" alt="" />
           </div>
           <div className="hero-outro-img" ref={outroImgBottomRef}>
-            <img src="/images2/img3.jpg" alt="" />
+            <img src="/uniq/img3.jpg" alt="" />
           </div>
 
           <div className="hero-outro-header">

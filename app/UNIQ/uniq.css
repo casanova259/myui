@@ -5,6 +5,10 @@
 /* so nothing leaks onto the rest of the site. Plain CSS is global,  */
 /* so every selector below is nested under .hero-animation-wrapper.  */
 /* ---------------------------------------------------------------- */
+
+body{
+  overflow-x: hidden;
+}
 .hero-animation-wrapper {
   --base-100: #dcdbd5;
   --base-200: #e12c1a;
