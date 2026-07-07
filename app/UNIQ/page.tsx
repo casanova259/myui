@@ -197,7 +197,7 @@ export default function HeroAnimation() {
         <div className="hero-bg-content">
           <div className="hero-bg-content-col">
             <div className="hero-bg-content-copy" ref={bgCopyLeftRef}>
-              <h3>Motion</h3>
+              <h3>Valor</h3>
               <p>
                 Bodies drawn through engineered light and open dark. Every
                 frame caught between the signal and the shadow that it
@@ -208,7 +208,7 @@ export default function HeroAnimation() {
 
           <div className="hero-bg-content-col">
             <div className="hero-bg-content-copy" ref={bgCopyRightRef}>
-              <h3>Silence</h3>
+              <h3>Soverign</h3>
               <p>
                 Stillness measured in reflected color and slow heat. Where
                 the moving crowd dissolves and only the burning outline
