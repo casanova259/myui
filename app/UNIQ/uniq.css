@@ -10,9 +10,9 @@ body{
   overflow-x: hidden;
 }
 .hero-animation-wrapper {
-  --base-100: #dcdbd5;
-  --base-200: #e12c1a;
-  --base-300: #1a0401;
+  --base-100: #e8e4dc;   /* warm off-white — was flat #dcdbd5 */
+  --base-200: #b8461f;   /* burnt rust/ember — was bright fire-engine red */
+  --base-300: #121212;   /* cold charcoal-blue-black — was warm near-black */
 }
 
 .hero-animation-wrapper * {
@@ -131,7 +131,7 @@ body{
 }
 
 .hero-animation-wrapper .hero-fg-overlay {
-  background-color: var(--base-200);
+  background-color: var(--base-300);
   z-index: 4;
 }
 
