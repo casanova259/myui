@@ -10,9 +10,9 @@ body{
   overflow-x: hidden;
 }
 .hero-animation-wrapper {
-  --base-100: #e8e4dc;   /* warm off-white — was flat #dcdbd5 */
-  --base-200: #b8461f;   /* burnt rust/ember — was bright fire-engine red */
-  --base-300: #121212;   /* cold charcoal-blue-black — was warm near-black */
+  --ink: #121212;                       /* obsidian */
+  --paper: #f7f7f7;                     /* white shade */
+  --flash: rgba(247, 247, 247, 0.5);    /* white flash accent overlay */
 }
 
 .hero-animation-wrapper * {
@@ -64,7 +64,7 @@ body{
 }
 
 .hero-animation-wrapper .about {
-  background-color: var(--base-300);
+  background-color: var(--ink);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,7 +72,7 @@ body{
 
 .hero-animation-wrapper .about h3 {
   text-align: center;
-  color: var(--base-300);
+  color: var(--paper);
   width: 60%;
 }
 
@@ -90,7 +90,7 @@ body{
 }
 
 .hero-animation-wrapper .hero-fg-content {
-  background-color: var(--base-300);
+  background-color: var(--ink);
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   will-change: clip-path, transform;
   z-index: 2;
@@ -109,7 +109,7 @@ body{
   transform: translateX(-50%);
   width: 95%;
   padding: 2rem;
-  color: var(--base-100);
+  color: var(--paper);
   text-align: center;
   z-index: 3;
 }
@@ -126,12 +126,12 @@ body{
 }
 
 .hero-animation-wrapper .hero-fg-overlay-dark {
-  background-color: var(--base-300);
+  background-color: var(--ink);
   z-index: 4;
 }
 
 .hero-animation-wrapper .hero-fg-overlay {
-  background-color: var(--base-300);
+  background-color: var(--flash);
   z-index: 4;
 }
 
@@ -140,7 +140,7 @@ body{
 /* ---------------------------------------------------------------- */
 .hero-animation-wrapper .hero-bg-content {
   display: flex;
-  background-color: var(--base-100);
+  background-color: var(--ink);
   z-index: 0;
 }
 
@@ -166,11 +166,11 @@ body{
 }
 
 .hero-animation-wrapper .hero-bg-content-copy h3 {
-  color: var(--base-200);
+  color: var(--paper);
 }
 
 .hero-animation-wrapper .hero-bg-content-copy p {
-  color: var(--base-300);
+  color: var(--paper);
 }
 
 /* ---------------------------------------------------------------- */
@@ -205,7 +205,7 @@ body{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--base-100);
+  color: var(--paper);
   text-align: center;
   width: 60%;
   z-index: 2;
