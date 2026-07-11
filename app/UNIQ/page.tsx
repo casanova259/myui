@@ -7,6 +7,7 @@
   import { SplitText } from "gsap/SplitText";
   import Lenis from "lenis";
   import "./uniq.css";
+import AltitudeSection from "./Altitude";
 
   gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
@@ -140,9 +141,9 @@
               clipPath: `polygon(0% 0%, 100% 0%, 100% ${topImgBottomEdge}%, 0% ${topImgBottomEdge}%)`,
             });
 
-            const bottomImgTopEdge = gsap.utils.interpolate(100, 0, phase4Progress);
+            // const bottomImgTopEdge = gsap.utils.interpolate(100, 0, phase4Progress);
             gsap.set(outroImgBottom, {
-              clipPath: `polygon(0% ${bottomImgTopEdge}%, 100% ${bottomImgTopEdge}%, 100% 100%, 0% 100%)`,
+              clipPath:  `polygon(0% 0%, 100% 0%, 100% ${topImgBottomEdge}%, 0% ${topImgBottomEdge}%)`,
             });
 
             // Phase 5 (0.9 →): outro header lines reveal / hide
@@ -231,11 +232,8 @@
           </div>
         </section>
 
+          <AltitudeSection/>
         <section className="about">
-          <h3>
-            A studio built for image, motion, and the quiet glow that keeps
-            burning after.
-          </h3>
         </section>
       </div>
     );
