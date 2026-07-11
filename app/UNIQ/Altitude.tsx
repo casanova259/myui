@@ -63,7 +63,24 @@ export default function AltitudeSection() {
         </div>
       </div>
 
-     
+      {/* Center decorative grid lines */}
+      <div className="absolute inset-0 hidden flex-col items-center justify-center gap-16 opacity-10 lg:flex">
+        <div className="absolute top-1/4 bottom-1/4 w-[1px] bg-black/20" />
+        <div className="flex items-center gap-16">
+          <div className="h-[2px] w-12 bg-black" />
+          <span className="z-10 bg-[#f0f0f0] px-1 font-mono text-xs">10</span>
+          <div className="h-[2px] w-12 bg-black" />
+        </div>
+        <div className="flex items-center gap-12">
+          <div className="h-[2px] w-16 bg-black" />
+          <span className="z-10 bg-[#f0f0f0] px-1 font-mono text-xs">05</span>
+          <div className="h-[2px] w-16 bg-black" />
+        </div>
+        <div className="flex items-center gap-32">
+          <div className="h-[2px] w-24 bg-black" />
+          <div className="h-[2px] w-24 bg-black" />
+        </div>
+      </div>
 
       {/* Vertical rotated label */}
       <div className="absolute bottom-16 left-1/2 hidden -translate-x-1/2 rotate-180 items-center gap-2 [writing-mode:vertical-lr] lg:flex">
@@ -83,16 +100,16 @@ export default function AltitudeSection() {
             <div className="absolute -bottom-3 -left-3 size-5 border-b-[3px] border-l-[3px] border-black" />
             <div className="absolute -right-3 -bottom-3 size-5 border-r-[3px] border-b-[3px] border-black" />
             <img
-              src="/uniq/img5.jpg"
+              src="/cockpit.webp"
               alt="Cockpit Interior"
-              className="h-full w-full object-cover opacity-100 mix-blend-multiply grayscale"
+              className="h-full w-full object-cover opacity-90 mix-blend-multiply grayscale"
             />
             <span className="absolute -bottom-7 left-0 font-mono text-[0.55rem] tracking-widest text-black/80">
               / FIG. 02
             </span>
           </div>
 
-          <div className="mt-16 mb-7 flex items-center gap-4 lg:mt-10">
+          <div className="mt-8 mb-4 flex items-center gap-4 lg:mt-10">
             <div className="size-2 animate-pulse bg-black" />
             <span className="font-mono text-[0.65rem] font-bold tracking-[0.3em] uppercase">
               Lock Engaged
@@ -127,7 +144,7 @@ export default function AltitudeSection() {
             <div className="absolute bottom-0 left-0 size-3 border-b-2 border-l-2 border-black" />
             <div className="absolute right-0 bottom-0 size-3 border-r-2 border-b-2 border-black" />
             <img
-              src="/uniq/img4.jpg"
+              src="/hero-img.webp"
               alt="Tactical Asset"
               className="h-full w-full object-cover opacity-90 mix-blend-multiply grayscale"
             />
