@@ -16,7 +16,7 @@ body {
   --flash: rgba(247, 247, 247, 0.5); /* white flash accent overlay */
 }
 
-.hero-animation-wrapper * {
+.hero-animation-wrapper :where(*) {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
