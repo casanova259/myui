@@ -204,7 +204,7 @@ export default function TrueKindHero() {
                     <div className="line">
                         <h1>touched by <span>kindness</span></h1>
                     </div>
-                    <div className="line">
+                    <div className="line subline">
                         <p>Skincare that stays true to nature and to you</p>
                     </div>
                 </div>
