@@ -199,10 +199,10 @@ export default function TrueKindHero() {
             <div className="header">
                 <div className="hero-copy">
                     <div className="line">
-                        <h1><span>Rooted</span> in care,</h1>
+                        <h1><span>Rooted</span> in softness,</h1>
                     </div>
                     <div className="line">
-                        <h1>grown with <span>kindness</span></h1>
+                        <h1>touched by <span>kindness</span></h1>
                     </div>
                     <div className="line">
                         <p>Skincare that stays true to nature and to you</p>
@@ -213,9 +213,7 @@ export default function TrueKindHero() {
                     <div className="cta-label">
                         <p>View all products</p>
                     </div>
-                    <div className="cta-icon">
-                        <HiArrowRight></HiArrowRight>
-                    </div>
+                    
                 </div>
             </div>
         </div>

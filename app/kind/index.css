@@ -280,6 +280,11 @@ p {
 }
 
 .cta {
+  padding: 0.5rem;
+  gap: 0/* nothing pushing the icon away from the edge */
+}
+
+.cta {
   transform: translateX(-50%) scale(0);
 }
 
