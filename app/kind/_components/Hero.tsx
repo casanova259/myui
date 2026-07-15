@@ -175,7 +175,7 @@ export default function TrueKindHero() {
                 </div>
             </div>
 
-            <div className="container">
+            <div className="hero-container">
                 <div className="hero-img">
                     <img src="/b.jpg" alt="" />
                 </div>
