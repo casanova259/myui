@@ -7,6 +7,7 @@ import { VerticalSlider } from "./components/VerticalSlider";
 import { SliderGridToggle } from "./components/SliderGridToggle";
 import { useSplitReveal } from "./hooks/useSplitReveal";
 import { useGalleryReveal } from "./hooks/useGalleryReveal";
+import { CasesSection } from "./components/CasesSection";
 
 const works = [
   { id: "01", title: "Aperture", image: "/uniq/img6.jpg" },
@@ -63,7 +64,12 @@ export function CaseStudyShowcase() {
       </section>
 
       <section className="px-8 py-24">
-        <VerticalSlider works={works} />
+        <CasesSection
+          works={works}
+          devName="Your Name"
+          role="Creative Developer"
+          location="Your City, Country"
+        />
       </section>
 
       <section className="px-8 py-24">
