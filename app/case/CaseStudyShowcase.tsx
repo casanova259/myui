@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { FlipLink } from "./components/FlipLink";
-import { Preloader } from "./components/Preloader";
+import  Preloader  from "./components/Preloader";
 import { VerticalSlider } from "./components/VerticalSlider";
 import { SliderGridToggle } from "./components/SliderGridToggle";
 import { useSplitReveal } from "./hooks/useSplitReveal";
@@ -28,7 +28,7 @@ export function CaseStudyShowcase() {
 
   return (
     <>
-      <Preloader posterSrc="/demo/poster.jpg" showreelTargetRef={showreelRef} />
+      <Preloader showreelId="/uniq/img12.jpg" showreelTargetRef={showreelRef} />
 
       <header className="flex items-center justify-between px-8 py-6">
         <span className="text-sm uppercase tracking-wide">Case Study</span>
