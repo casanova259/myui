@@ -1,0 +1,38 @@
+.fixed-bg {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  overflow: hidden;
+  background: #000;
+}
+.fixed-bg svg {
+  border-radius: 2.5vh;
+  width: 50%;
+  top: 5%;
+  height: 90%;
+  position: absolute;
+  left: 25%;
+}
+@media (max-aspect-ratio: 1.5) {
+  .fixed-bg svg {
+    left: 9%;
+    width: 82%;
+  }
+}
+.main {
+  width: 100vw;
+  height: 100dvh;
+  position: relative;
+  top: 0;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: none;
+}
+.section {
+  scroll-snap-align: center;
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  min-height: 100vh;
+}
