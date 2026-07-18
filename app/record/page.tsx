@@ -1,10 +1,12 @@
 "use client";
 
 import VinylPlayer from "@/components/vinylrecord/vinyl";
+import BrutalistSlider from "./_components/Brutalist";
 
 export default function Page()
 {
-    return( <div className="min-h-screen w-full flex items-center justify-center bg-black">
-        <VinylPlayer/>
-    </div>);
+    return( 
+        
+        <BrutalistSlider/>
+    );
 }

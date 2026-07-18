@@ -1,7 +1,19 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    formats: ["image/avif", "image/webp"], // add avif first — ~50% smaller than webp
-    qualities: [75,85],                        // you only need one; Next picks based on your <Image quality={} /> prop
+    // 1. Optimization Settings
+    formats: ["image/avif", "image/webp"], 
+    qualities: [75, 85], 
+    
+    // 2. External Domain Allowlist (Fixes the Unsplash Error)
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**', 
+      },
+    ],
   },
-}
-export default nextConfig
+};
+
+export default nextConfig;
