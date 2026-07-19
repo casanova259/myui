@@ -71,11 +71,11 @@ export default function ScrollAnimation() {
   return (
     <div ref={containerRef}>
       <div className="fixed-bg">
-        <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+        <svg viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice">
           <g className="pov-scale">
             <g className="pov-pan">
               <image
-                href="https://images.unsplash.com/photo-1771681617105-745758eae89b?q=80&w=3000"
+                href="/polariod.png"
                 width={1000}
               />
               <g className="motion-paths" fill="none">
