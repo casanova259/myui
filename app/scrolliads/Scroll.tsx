@@ -75,7 +75,7 @@ export default function ScrollAnimation() {
           <g className="pov-scale">
             <g className="pov-pan">
               <image
-                href="/polariod.png"
+                href="/pol.png"
                 width={1000}
               />
               <g className="motion-paths" fill="none">
