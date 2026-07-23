@@ -9,18 +9,18 @@ const Navbar = () => {
     >
       <div className="navbar-logo">
         <div className="navbar-item">
-          <Link href="/">FELT</Link>
+          <Link href="/tra">FELT</Link>
         </div>
       </div>
       <div className="navbar-items">
         <div className="navbar-item">
-          <Link href="/">Work</Link>
+          <Link href="/tra">Work</Link>
         </div>
         <div className="navbar-item">
-          <Link href="/studio">Studio</Link>
+          <Link href="/tra/studio">Studio</Link>
         </div>
         <div className="navbar-item">
-          <Link href="/contact">Contact</Link>
+          <Link href="/tra/contact">Contact</Link>
         </div>
       </div>
     </nav>
