@@ -158,7 +158,7 @@ export default function ProjectsSection() {
                             ) : (
                                 // Image Tile Layout
                                <Link className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-black/60" href={project.href || "#"} aria-label={`See ${project.title}`}>
-                                    <div className="projects__item__thumb projects__item__image aspect-[520/370] w-full sm:w-[17.55vw] will-change-transform bg-[#e0e0e0] overflow-hidden relative">
+                                    <div className="projects__item__thumb projects__item__image aspect-[520/370] w-full sm:w-[20vw] will-change-transform bg-[#e0e0e0] overflow-hidden relative">
                                         <Image
                                             src={project.img}
                                             alt={project.title}
