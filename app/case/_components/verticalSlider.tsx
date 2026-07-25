@@ -145,7 +145,7 @@ export default function ProjectsSection() {
                             ref={(el) => { itemsRef.current[i] = el; }}
                             className="projects__item space-y-8 relative z-20"
                         >
-                            {project.isVideo ? (
+                            {/* {project.isVideo ? (
                                 // Showreel Tile Layout
                                 <div className="relative aspect-[16/9] w-full">
                                     <div className="projects__showreel aspect-[16/9] object-cover">
@@ -155,9 +155,8 @@ export default function ProjectsSection() {
                                         </div>
                                     </div>
                                 </div>
-                            ) : (
-                                // Image Tile Layout
-                               <Link className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-black/60" href={project.href || "#"} aria-label={`See ${project.title}`}>
+                            ) : ( */}
+<Link className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-black/60" href={project.href || "#"} aria-label={`See ${project.title}`}>
                                     <div className="projects__item__thumb projects__item__image aspect-[520/370] w-full sm:w-[20vw] will-change-transform bg-[#e0e0e0] overflow-hidden relative">
                                         <Image
                                             src={project.img}
@@ -168,7 +167,6 @@ export default function ProjectsSection() {
                                         />
                                     </div>
                                 </Link>
-                            )}
 
                             {/* Mobile Title (hidden on sm breakpoint) */}
                             <p className="projects__title text-xl font-medium sm:hidden block">
