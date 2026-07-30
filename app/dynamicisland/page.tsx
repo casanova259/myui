@@ -18,9 +18,9 @@ export default function DynamicIslandPage() {
             spring-based layout animation in action.
           </p>
         </div>
-        <div className="p-4 border border-zinc-200 dark:border-zinc-800 rounded-md">
+        <div className="p-4 border border-zinc-500 dark:border-zinc-800 rounded-md">
           <DynamicIslandWrapper />
-        </div>
+        </div>  
       </div>
     </main>
   );
