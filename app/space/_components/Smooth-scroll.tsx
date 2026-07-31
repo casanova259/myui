@@ -11,6 +11,10 @@ import {
 import { SiSpacex } from "react-icons/si";
 import { FiArrowRight, FiMapPin } from "react-icons/fi";
 import { useRef } from "react";
+import Image from "next/image";
+
+// Wraps next/image so Motion can animate it directly (transform/opacity via style)
+const MotionImage = motion.create(Image);
 
 export const SmoothScrollHero = () => {
   return (
@@ -94,7 +98,7 @@ const CenterImage = () => {
         backgroundSize,
         opacity,
         backgroundImage:
-          "url(https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=80&w=2670&auto=format&fit=crop)",
+          "url(https://images.unsplash.com/photo-1517976487492-5750f3195933?q=60&w=1600&auto=format&fit=crop)",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
@@ -106,28 +110,28 @@ const ParallaxImages = () => {
   return (
     <div className="mx-auto max-w-5xl px-4 pt-[200px]">
       <ParallaxImg
-        src="https://images.unsplash.com/photo-1457364559154-aa2644600ebb?q=80&w=2670&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1457364559154-aa2644600ebb?q=60&w=800&auto=format&fit=crop"
         alt="Starry night sky"
         start={-200}
         end={200}
         className="w-1/3"
       />
       <ParallaxImg
-        src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2670&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=60&w=1200&auto=format&fit=crop"
         alt="Rocket launch pad in daylight"
         start={200}
         end={-250}
         className="mx-auto w-2/3"
       />
       <ParallaxImg
-        src="https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=2670&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=60&w=800&auto=format&fit=crop"
         alt="Earth seen from space"
         start={-200}
         end={200}
         className="ml-auto w-1/3"
       />
       <ParallaxImg
-        src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=80&w=2670&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?q=60&w=1000&auto=format&fit=crop"
         alt="Galaxy and nebula in deep space"
         start={0}
         end={-500}
@@ -146,7 +150,7 @@ type ParallaxImgProps = {
 };
 
 const ParallaxImg = ({ className, alt, src, start, end }: ParallaxImgProps) => {
-  const ref = useRef<HTMLImageElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -160,13 +164,22 @@ const ParallaxImg = ({ className, alt, src, start, end }: ParallaxImgProps) => {
   const transform = useMotionTemplate`translateY(${y}px) scale(${scale})`;
 
   return (
-    <motion.img
-      src={src}
-      alt={alt}
-      className={className}
+    // next/image with `fill` needs a positioned parent with real dimensions —
+    // aspect-square gives it a height, motion values animate this wrapper.
+    <motion.div
       ref={ref}
+      className={`relative aspect-square overflow-hidden ${className ?? ""}`}
       style={{ transform, opacity }}
-    />
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        loading="lazy"
+        sizes="(max-width: 768px) 50vw, 33vw"
+        className="object-cover"
+      />
+    </motion.div>
   );
 };
 
