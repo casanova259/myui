@@ -3,15 +3,30 @@
 import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import gsap from "gsap";
+import { Fraunces, IBM_Plex_Mono } from "next/font/google";
 
-const textContent =
-  "Aliquip cillum ut magna officia dolore labore in anim eiusmod veniam duis nostrud velit ut anim. Magna sint mollit Lorem esse duis non culpa.";
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+  variable: "--font-fraunces",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["500"],
+  variable: "--font-plex-mono",
+});
+
+const tagline =
+  "Fathom listens to the scattered version of your thinking and hands back the through-line — before you've finished the thought.";
 
 const Page = () => {
   const firstRef = useRef<HTMLDivElement>(null);
   const secondRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
+  const eyebrowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let flipTimer = 0;
@@ -22,16 +37,15 @@ const Page = () => {
     const second = secondRef.current;
     const box = boxRef.current;
     const text = textRef.current;
+    const eyebrow = eyebrowRef.current;
 
-    if (!first || !second || !box || !text) {
+    if (!first || !second || !box || !text || !eyebrow) {
       return;
     }
 
     const words = text.querySelectorAll("[data-word]");
-    gsap.set(words, {
-      opacity: 0,
-      filter: "blur(8px)",
-    });
+    gsap.set(words, { opacity: 0, filter: "blur(8px)" });
+    gsap.set(eyebrow, { opacity: 0, y: 6 });
 
     void import("gsap/Flip").then((flipModule) => {
       if (!isActive) {
@@ -49,12 +63,19 @@ const Page = () => {
         });
 
         textTimer = window.setTimeout(() => {
+          gsap.to(eyebrow, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+          });
           gsap.to(words, {
             opacity: 1,
             filter: "blur(0px)",
             stagger: 0.05,
             duration: 0.45,
             ease: "power2.out",
+            delay: 0.15,
           });
         }, 880);
       }, 600);
@@ -68,7 +89,9 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full items-center justify-center gap-4 p-4 sm:gap-10 md:gap-20">
+    <div
+      className={`${fraunces.variable} ${plexMono.variable} flex h-screen w-screen items-center justify-center gap-4 bg-[#050608] p-4 sm:gap-10 md:gap-20`}
+    >
       <div
         ref={firstRef}
         className="flex h-12 w-12 items-center justify-center absolute sm:h-20 sm:w-20 md:h-24 md:w-24"
@@ -85,13 +108,26 @@ const Page = () => {
           }}
         />
       </div>
-      <div className="flex min-w-0 flex-col gap-2 text-sm sm:gap-4 sm:text-xl md:gap-6 md:text-3xl">
+      <div className="flex min-w-0 max-w-md flex-col gap-3 sm:gap-4 md:gap-5">
         <div
           ref={secondRef}
           className="flex h-12 w-12 items-center justify-center sm:h-20 sm:w-20 md:h-24 md:w-24"
         />
-        <span ref={textRef} className="flex w-full max-w-md flex-wrap gap-x-2">
-          {textContent.split(" ").map((word, index) => (
+        <div
+          ref={eyebrowRef}
+          className="flex items-center gap-2 font-[family-name:var(--font-plex-mono)] text-[11px] uppercase tracking-[0.2em] text-[#5B6B7A] sm:text-xs"
+        >
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#26F9FF] opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#26F9FF]" />
+          </span>
+          Fathom — AI thinking partner
+        </div>
+        <span
+          ref={textRef}
+          className="flex w-full flex-wrap gap-x-2 font-[family-name:var(--font-fraunces)] text-xl italic leading-snug text-[#EDEEF0] sm:text-2xl md:text-3xl"
+        >
+          {tagline.split(" ").map((word, index) => (
             <span key={`${word}-${index}`} data-word>
               {word}
             </span>
