@@ -2,7 +2,7 @@ import MarqueeAlongPath from "./_components/MarqueeAlongPath";
 import Card from "./_components/card";
 
 const path =
-  "M0 186.219C138.5 186.219 305.5 194.719 305.5 49.7188C305.5 -113.652 -75 186.219 484.5 186.219H587.5";
+  "M0 279.3285C207.75 279.3285 458.25 292.0785 458.25 74.5782C458.25 -170.478 -112.5 279.3285 726.75 279.3285H881.25";
 
 export default function Page() {
   return (

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo, useRef } from "react";
-import "./marquealongpath.css" 
 import {
   motion,
   useMotionValue,
@@ -11,6 +10,7 @@ import {
   useScroll,
   useVelocity,
 } from "motion/react";
+import "./marquealongpath.css"
 
 /**
  * Wraps a number between a min and max value
@@ -163,7 +163,7 @@ export default function MarqueeAlongPath({
       <svg
         width="100%"
         height="100%"
-        viewBox="0 0 588 187"
+        viewBox="0 0 882 470"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
