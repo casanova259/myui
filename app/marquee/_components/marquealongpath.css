@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+
+.container {
+  position: relative;
+  width: 588px;
+  height: 187px;
+}
+
+.marquee-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.card {
+  width: 140px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.card-number {
+  font-weight: 600;
+}
+
+.card-brand {
+  text-align: right;
+  font-weight: 600;
+}
+
+.card-year {
+  text-align: right;
+  color: #888;
+}
+
+.card-footer {
+  border-top: 1px solid #eee;
+  padding-top: 6px;
+  color: #888;
+}
