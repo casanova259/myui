@@ -248,7 +248,7 @@ const MarqueeAlongPath = ({
         const marqueeContainer = marqueeContainerRef.current;
         if (!wrapper || !marqueeContainer) return;
 
-        const scale = wrapper.clientWidth / 588;
+        const scale = wrapper.clientWidth / 550;
         marqueeContainer.style.transform = `scale(${scale})`;
         marqueeContainer.style.transformOrigin = 'top left';
       };

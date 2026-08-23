@@ -26,7 +26,7 @@ export default function Page() {
         <MarqueeAlongPath
           path={path}
           baseVelocity={5}
-          repeat={5}
+          repeat={4}
           scrollContainerRef={scrollContainerRef}
         >
           {artworks.map((artwork, i) => (
