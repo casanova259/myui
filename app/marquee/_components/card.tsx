@@ -1,20 +1,27 @@
+import { artworks } from "./artworks";
+
 type CardProps = {
   index: number;
+  artwork?: (typeof artworks)[0];
 };
 
-export default function Card({ index }: CardProps) {
+const Card = ({ index, artwork }: CardProps) => {
+  // Fallback to cycling through artworks if no specific artwork is provided
+  const currentArtwork = artwork || artworks[index % artworks.length];
+
   return (
     <div className="card">
-      <div className="card-header">
-        <div className="card-number">
-          Element {(index + 1).toString().padStart(2, "0")}
-        </div>
-        <div>
-          <div className="card-brand">Codrops</div>
-          <div className="card-year">2025</div>
-        </div>
+      <div
+        className="card-background"
+        style={{
+          backgroundImage: `url(${currentArtwork.src})`,
+        }}
+      />
+      <div className="card-footer">
+        <div className="card-artist">{currentArtwork.artist}</div>
       </div>
-      <div className="card-footer">Marquee</div>
     </div>
   );
-}
+};
+
+export default Card;
