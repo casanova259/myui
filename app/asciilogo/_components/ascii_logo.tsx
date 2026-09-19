@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useDialKit } from "dialkit";
 import styles from "./ascii_logo.module.css";
 
 type AsciiLogoProps = {
@@ -10,17 +11,57 @@ type AsciiLogoProps = {
 };
 
 /**
- * Interactive ASCII-art hero: samples a logo image's brightness into a
- * character grid drawn on a <canvas>, then continuously "glitches" the
- * lit characters and pushes them away from the mouse with a spring-back
+ * Interactive ASCII-art hero: samples a logo image's alpha channel into a
+ * character grid drawn on a <canvas>, then continuously "glitches" the lit
+ * characters and pushes them away from the cursor with a spring-back
  * physics simulation.
  *
- * Direct port of a vanilla JS/CSS implementation (index.html + styles.css
- * + script.js) into a self-contained React/Next.js client component.
+ * Every visual/behavioral knob is wired to DialKit (`useDialKit`) so it
+ * shows up in the floating panel rendered by <DialRoot /> — see the
+ * project README for where to mount that.
  */
 export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const imgRef = useRef<HTMLImageElement | null>(null);
+
+    const params = useDialKit(
+        "ASCII Logo",
+        {
+            grid: {
+                cellSize: [8, 3, 24],
+                cellGap: [2, 0, 8],
+            },
+            appearance: {
+                gridColor: "#171717",
+                charColor: "#dadada",
+                asciiChars: { type: "text", default: ".:+*#%@0369" },
+                threshold: [0.5, 0, 1],
+            },
+            cursor: {
+                cursorRadius: [5, 1, 20],
+                pushForce: [30, 0, 100],
+                spring: [0.025, 0.001, 0.2],
+                damping: [0.5, 0.1, 0.95],
+            },
+            timing: {
+                glitchSpeed: [50, 16, 300],
+            },
+        },
+        { persist: true, id: "ascii-logo" },
+    );
+
+    // The animation loop and physics step read this ref every frame, so
+    // dragging a slider updates the canvas immediately without needing to
+    // tear down and restart the whole effect (which owns the canvas context,
+    // event listeners, and the requestAnimationFrame loop).
+    const paramsRef = useRef(params);
+    paramsRef.current = params;
+
+    // Imperative handle to re-run setup + sampling, set once by the main
+    // effect below and invoked again whenever a grid-affecting or
+    // sampling-affecting control changes (cell size/gap, threshold).
+    const initRef = useRef<() => void>(() => { });
+    const didMountRef = useRef(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -30,18 +71,9 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
         const ctx = canvas.getContext("2d", { alpha: true });
         if (!ctx) return;
 
-        // ---- tunables (same defaults as the original script.js) ----
-        let CELL_SIZE = 8;
-        let CELL_GAP = 2;
+        let CELL_SIZE = paramsRef.current.grid.cellSize;
+        let CELL_GAP = paramsRef.current.grid.cellGap;
         let CELL_STEP = CELL_SIZE + CELL_GAP;
-        const GRID_COLOR = "#171717";
-        const CHAR_COLOR = "#dadada";
-        const ASCII_CHARS = ".:+*#%@0369";
-        const THRESHOLD = 0.5;
-        const PUSH_RADIUS = 5;
-        const PUSH_FORCE = 30;
-        const SPRING = 0.025;
-        const DAMPING = 0.5;
 
         const dpr = window.devicePixelRatio || 1;
 
@@ -61,8 +93,9 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
         let cells: Cell[] = [];
 
         function setupCanvas() {
-            CELL_SIZE = window.innerWidth < 768 ? 3 : 8;
-            CELL_GAP = window.innerWidth < 768 ? 1 : 2;
+            const base = paramsRef.current.grid;
+            CELL_SIZE = window.innerWidth < 768 ? Math.max(2, Math.round(base.cellSize * 0.4)) : base.cellSize;
+            CELL_GAP = window.innerWidth < 768 ? Math.max(1, Math.round(base.cellGap * 0.5)) : base.cellGap;
             CELL_STEP = CELL_SIZE + CELL_GAP;
             cols = Math.floor(window.innerWidth / CELL_STEP);
             rows = Math.floor(window.innerHeight / CELL_STEP);
@@ -73,13 +106,14 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
 
         function drawGrid() {
             ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
-            ctx!.fillStyle = GRID_COLOR;
+            ctx!.fillStyle = paramsRef.current.appearance.gridColor;
             for (let row = 0; row < rows; row++)
                 for (let col = 0; col < cols; col++)
                     ctx!.fillRect(col * CELL_STEP, row * CELL_STEP, CELL_SIZE, CELL_SIZE);
         }
 
         function sampleLogoIntoCells() {
+            const { asciiChars, threshold } = paramsRef.current.appearance;
             const rect = logoImg!.getBoundingClientRect();
             const logoCols = Math.ceil(rect.width / CELL_STEP);
             const logoRows = Math.ceil(rect.height / CELL_STEP);
@@ -91,13 +125,9 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
             sampleCanvas.height = logoRows;
             const sampleCtx = sampleCanvas.getContext("2d");
             if (!sampleCtx) return;
-            // Draw onto a transparent offscreen canvas (no black fill) so we can
-            // read each pixel's alpha channel directly, rather than compositing
-            // onto a background color and inferring presence from RGB brightness.
-            // Brightness-based detection breaks for dark logos on transparent
-            // PNGs (e.g. a black mark), since dark ink blended onto a black fill
-            // reads as ~0 brightness everywhere and never crosses THRESHOLD.
-            // Alpha tells us "is there ink here" regardless of the logo's color.
+            // Transparent offscreen canvas: read alpha directly rather than
+            // compositing onto a background color and inferring presence from
+            // RGB brightness (which breaks for dark logos on transparent PNGs).
             sampleCtx.clearRect(0, 0, logoCols, logoRows);
             sampleCtx.drawImage(logoImg!, 0, 0, logoCols, logoRows);
             const { data } = sampleCtx.getImageData(0, 0, logoCols, logoRows);
@@ -115,13 +145,10 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
                     if (inLogo) {
                         const idx = ((row - startRow) * logoCols + (col - startCol)) * 4;
                         const alpha = data[idx + 3] / 255; // 0 = fully transparent, 1 = fully opaque
-                        isLit = alpha > THRESHOLD;
+                        isLit = alpha > threshold;
                         char = isLit
-                            ? ASCII_CHARS[
-                            Math.min(
-                                ASCII_CHARS.length - 1,
-                                Math.floor(alpha * ASCII_CHARS.length),
-                            )
+                            ? asciiChars[
+                            Math.min(asciiChars.length - 1, Math.floor(alpha * asciiChars.length))
                             ]
                             : " ";
                     }
@@ -140,16 +167,17 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
         }
 
         function renderFrame() {
+            const { gridColor, charColor } = paramsRef.current.appearance;
             ctx!.font = `${CELL_SIZE + 2}px monospace`;
             ctx!.textBaseline = "top";
             ctx!.textAlign = "center";
             ctx!.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-            ctx!.fillStyle = GRID_COLOR;
+            ctx!.fillStyle = gridColor;
             for (const { col, row } of cells)
                 ctx!.fillRect(col * CELL_STEP, row * CELL_STEP, CELL_SIZE, CELL_SIZE);
 
-            ctx!.fillStyle = CHAR_COLOR;
+            ctx!.fillStyle = charColor;
             for (const { col, row, char, isLit, offsetX, offsetY } of cells) {
                 if (!isLit) continue;
                 const x = (col + Math.round(offsetX)) * CELL_STEP;
@@ -163,29 +191,31 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
             sampleLogoIntoCells();
             renderFrame();
         }
+        initRef.current = init;
 
         const mouse = { col: -999, row: -999, isMoving: false };
         let idleTimer: ReturnType<typeof setTimeout> | null = null;
-        let glitchInterval: ReturnType<typeof setInterval> | null = null;
         let rafId = 0;
+        let lastGlitchTime = 0;
 
         function updatePhysics() {
+            const { cursorRadius, pushForce, spring, damping } = paramsRef.current.cursor;
             for (const cell of cells) {
                 if (!cell.isLit) continue;
                 if (mouse.isMoving) {
                     const dx = cell.col + cell.offsetX - mouse.col;
                     const dy = cell.row + cell.offsetY - mouse.row;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < PUSH_RADIUS && dist > 0) {
-                        const force = (1 - dist / PUSH_RADIUS) ** 2 * PUSH_FORCE;
+                    if (dist < cursorRadius && dist > 0) {
+                        const force = (1 - dist / cursorRadius) ** 2 * pushForce;
                         cell.velX += (dx / dist) * force;
                         cell.velY += (dy / dist) * force;
                     }
                 }
-                cell.velX += -cell.offsetX * SPRING;
-                cell.velY += -cell.offsetY * SPRING;
-                cell.velX *= DAMPING;
-                cell.velY *= DAMPING;
+                cell.velX += -cell.offsetX * spring;
+                cell.velY += -cell.offsetY * spring;
+                cell.velX *= damping;
+                cell.velY *= damping;
                 cell.offsetX += cell.velX;
                 cell.offsetY += cell.velY;
                 if (Math.abs(cell.offsetX) < 0.01 && Math.abs(cell.velX) < 0.01) {
@@ -197,8 +227,18 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
             }
         }
 
-        function animationLoop() {
+        // Glitch/randomize is folded into the rAF loop (rather than a separate
+        // setInterval) so its speed can change live via the slider without
+        // needing to clear and recreate a timer.
+        function animationLoop(time: number) {
             updatePhysics();
+            const { asciiChars } = paramsRef.current.appearance;
+            const { glitchSpeed } = paramsRef.current.timing;
+            if (time - lastGlitchTime > glitchSpeed) {
+                lastGlitchTime = time;
+                for (const cell of cells)
+                    if (cell.isLit) cell.char = asciiChars[Math.floor(Math.random() * asciiChars.length)];
+            }
             renderFrame();
             rafId = requestAnimationFrame(animationLoop);
         }
@@ -236,13 +276,6 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseleave", handleMouseLeave);
 
-        glitchInterval = setInterval(() => {
-            for (const cell of cells)
-                if (cell.isLit)
-                    cell.char = ASCII_CHARS[Math.floor(Math.random() * ASCII_CHARS.length)];
-            renderFrame();
-        }, 50);
-
         rafId = requestAnimationFrame(animationLoop);
 
         return () => {
@@ -251,10 +284,24 @@ export default function AsciiLogo({ src, alt = "" }: AsciiLogoProps) {
             window.removeEventListener("mouseleave", handleMouseLeave);
             logoImg.removeEventListener("load", init);
             if (idleTimer) clearTimeout(idleTimer);
-            if (glitchInterval) clearInterval(glitchInterval);
             cancelAnimationFrame(rafId);
         };
+        // Intentionally empty: this effect owns the canvas/context, event
+        // listeners, and rAF loop for the component's lifetime. Live parameter
+        // changes flow in through paramsRef instead of re-running this effect.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // Grid geometry and the alpha threshold change how many cells exist and
+    // which ones are lit, so those need a real re-sample — everything else
+    // (colors, physics, glitch speed) just reads paramsRef on the next frame.
+    useEffect(() => {
+        if (!didMountRef.current) {
+            didMountRef.current = true;
+            return;
+        }
+        initRef.current();
+    }, [params.grid.cellSize, params.grid.cellGap, params.appearance.threshold]);
 
     return (
         <div className={styles.hero}>
